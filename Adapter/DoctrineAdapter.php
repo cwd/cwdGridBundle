@@ -28,6 +28,15 @@ class DoctrineAdapter implements AdapterInterface
     {
         $queryBuilder = $grid->getQueryBuilder($this->getDoctrineRegistry()->getManager(), $grid->all());
 
+        if (null !== $grid->getOption('sortField')) {
+            $field = $grid->getOption('sortField');
+            if ($grid->has($field)) {
+                $column = $grid->get($field);
+                $grid->setSortField($column, $grid->getOption('sortDir'));
+                $queryBuilder->orderBy($column->getField(), $grid->getOption('sortDir'));
+            }
+        }
+
         if ($grid->getOption('filter', false)) {
             $this->addSearch($queryBuilder, $grid);
         }

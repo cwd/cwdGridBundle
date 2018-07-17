@@ -2,7 +2,7 @@
 <table id="{{ grid.id }}" class="table grid table-striped table-bordered table-condensed">
     <thead>
     {% for column in grid if column.options.visible %}
-        <th>{{ column.options.label|trans }}</th>
+        <th class="{% if column.isSorted() %}sorted {{ column.getSortDir() }}{% endif %}" data-field="{{ column.name }}">{{ column.options.label|trans }}</th>
     {% endfor %}
     </thead>
     <tbody>
@@ -20,3 +20,36 @@
     </td>
     </tfoot>
 </table>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        var $grid = $('table.grid');
+        var $headers = $grid.find('th');
+
+        $headers.each(function(idx) {
+            if ($(this).hasClass('sorted')) {
+                if ($(this).hasClass('ASC')) {
+                    $(this).append('<i class="fas fa-sort-alpha-down pull-right"></i>');
+                } else if ($(this).hasClass('DESC')) {
+                    $(this).append('<i class="fas fa-sort-alpha-up pull-right"></i>');
+                }
+            }
+
+            $(this).on('click', function(e){
+                var params = {};
+                params.sortDir = 'ASC';
+                if ($(this).hasClass('sorted')) {
+                    if ($(this).hasClass('ASC')) {
+                        params.sortDir = 'DESC';
+                    }
+                }
+                params.sortField = $(this).data('field');
+                params.page = 1;
+
+                document.location.href = '?' + $.param(params);
+            });
+
+            $(this).css('cursor', '');
+        });
+    });
+</script>

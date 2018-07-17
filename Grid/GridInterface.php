@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Cwd\GridBundle\Grid;
 
 use Cwd\GridBundle\Adapter\AdapterInterface;
+use Cwd\GridBundle\Column\ColumnInterface;
 
 interface GridInterface
 {
@@ -32,4 +33,30 @@ interface GridInterface
     public function setTwig(\Twig_Environment $twig);
 
     public function getTwig(): \Twig_Environment;
+
+    /**
+     * @param string $name
+     *
+     * @return ColumnInterface
+     */
+    public function get(string $name): ColumnInterface;
+
+    /**
+     * @param string $name
+     *
+     * @return $this
+     */
+    public function remove(string $name): GridInterface;
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function has(string $name): bool;
+
+    /**
+     * @return \Cwd\GridBundle\Column\ColumnInterface[]
+     */
+    public function all(): array;
 }

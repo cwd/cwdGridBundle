@@ -126,12 +126,25 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
     public function getId()
     {
         $data = [
-            $this->getOption('data_route'),
+            get_class($this),
             $this->getOption('data_route_options'),
             $this->getOption('template'),
         ];
 
         return md5(serialize($data));
+    }
+
+    public function setSortField(ColumnInterface $field, $sortDir = 'ASC')
+    {
+        foreach ($this->all() as $column) {
+            $column->setIsSorted(false);
+            $column->setSortDir(null);
+        }
+
+        $field->setIsSorted(true);
+        $field->setSortDir($sortDir);
+
+        return $this;
     }
 
     /**
@@ -245,13 +258,11 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
     {
         $resolver->setDefaults([
             'template' => '@CwdGrid/Grid/template.html.twig',
-            'current' => 1,
             'filter' => null,
-            'sortField' => null,
-            'sortDir' => null,
-            'data_route_options' => [],
             'page' => 1,
             'limit' => 20,
+            'sortField' => null,
+            'sortDir' => 'ASC',
         ]);
 
         $resolver->setRequired([
@@ -316,7 +327,7 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
      *
      * @return $this
      */
-    public function remove(string $name)
+    public function remove(string $name): GridInterface
     {
         unset($this->children[$name]);
 
@@ -328,7 +339,7 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
      *
      * @return bool
      */
-    public function has(string $name)
+    public function has(string $name): bool
     {
         return isset($this->children[$name]);
     }
@@ -336,7 +347,7 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
     /**
      * @return \Cwd\GridBundle\Column\ColumnInterface[]
      */
-    public function all()
+    public function all(): array
     {
         return $this->children;
     }

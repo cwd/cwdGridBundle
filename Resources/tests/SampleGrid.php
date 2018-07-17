@@ -19,6 +19,7 @@ use Cwd\GridBundle\Grid\AbstractGrid;
 use Cwd\GridBundle\GridBuilderInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SampleGrid extends AbstractGrid
 {
@@ -46,9 +47,21 @@ class SampleGrid extends AbstractGrid
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = $objectManager
             ->getRepository(Sample::class)
-            ->createQueryBuilder('sample')
-            ->addOrderBy('sample.firstname', 'ASC');
+            ->createQueryBuilder('sample');
 
         return $queryBuilder;
+    }
+
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setDefaults([
+            'data_route' => 'app_admin_infrastructure_web_machine_ajaxdata',
+            'sortField' => 'lastname',
+        ]);
     }
 }

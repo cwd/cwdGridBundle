@@ -43,6 +43,10 @@ abstract class AbstractColumn implements ColumnInterface
      */
     protected $translator;
 
+    protected $isSorted = false;
+
+    protected $sortDir = null;
+
     /**
      * AbstractColumn constructor.
      *
@@ -74,6 +78,30 @@ abstract class AbstractColumn implements ColumnInterface
     public function getField(): ?string
     {
         return $this->field;
+    }
+
+    public function setIsSorted(bool $state): ColumnInterface
+    {
+        $this->isSorted = $state;
+
+        return $this;
+    }
+
+    public function setSortDir(?string $dir = null): ColumnInterface
+    {
+        $this->sortDir = $dir;
+
+        return $this;
+    }
+
+    public function isSorted(): bool
+    {
+        return $this->isSorted;
+    }
+
+    public function getSortDir(): ?string
+    {
+        return $this->sortDir;
     }
 
     /**
@@ -124,46 +152,24 @@ abstract class AbstractColumn implements ColumnInterface
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
+            'identifier' => false,
+            'label' => null,
             'align' => 'left',
             'cellAlign' => 'left',
-            'cellTip' => null,
-            'cls' => null,
-            'draggable' => null,
-            'editable' => null,
-            'ellipsis' => true,
-            'flex' => 1,
-            'hidden' => false,
-            'index' => null,
-            'lockable' => null,
-            'locked' => null,
-            'maxWidth' => null,
-            'menu' => null,
-            'minWidth' => null,
-            'render' => null,
-            'resizable' => null,
-            'rightLocked' => null,
+            'visible' => true,
             'sortable' => true,
-            'title' => null,
-            'type' => null,
-            'vtype' => null,
-            'width' => null,
             'searchable' => true,
+            'width' => null,
+            'ellipsis' => true,
+            'translation_domain' => null,
+            'translatable' => false,
+            'attr' => [],
+            'template' => null,
+
             'filter' => [
                 'header' => true,
                 'headerNote' => true,
             ],
-
-            'translation_domain' => null,
-            'translatable' => false,
-            'attr' => array(),
-            'template' => null,
-
-            // Legacy
-            'identifier' => null,
-            'label' => null,
-
-            // NEW
-            'visible' => true,
         ));
 
         $resolver->setAllowedTypes('attr', 'array');

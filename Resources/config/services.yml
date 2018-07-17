@@ -1,0 +1,21 @@
+services:
+    Cwd\GridBundle\Adapter\DoctrineAdapter:
+        calls:
+            - [setDoctrineRegistry, ['@?doctrine']]
+        tags: ['cwd_grid.adapter']
+
+    Cwd\GridBundle\GridFactory:
+        public: true
+        arguments:
+            - '@twig'
+        calls:
+            - [setTranslator, ['@?translator']]
+
+
+    Cwd\GridBundle\Twig\GridExtension:
+        arguments:
+            - "@router"
+#            - "%cwd.fancygrid.config%"
+        public: false
+        tags:
+            - { name: twig.extension }

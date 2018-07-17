@@ -1,0 +1,22 @@
+{% set data = grid.data() %}
+<table id="{{ grid.id }}" class="table grid table-striped table-bordered table-condensed">
+    <thead>
+    {% for column in grid if column.options.visible %}
+        <th>{{ column.options.label|trans }}</th>
+    {% endfor %}
+    </thead>
+    <tbody>
+    {% for row in data.data %}
+        <tr>
+            {% for column in grid if column.options.visible %}
+                <td class="{% if column.options.ellipsis %}ellipsis{% endif %}" ><div class="wrap" style="max-width:100px">{{ attribute(row, column.name)|raw }}</div></td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot class="pagerfanta">
+    <td colspan="{{ grid.all|length }}">
+        {{ pagerfanta(data.pager) }}
+    </td>
+    </tfoot>
+</table>

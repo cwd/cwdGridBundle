@@ -15,9 +15,12 @@ namespace Cwd\GridBundle\Grid;
 
 use Cwd\GridBundle\Adapter\AdapterInterface;
 use Cwd\GridBundle\Column\ColumnInterface;
+use Cwd\GridBundle\GridBuilderInterface;
 
 interface GridInterface
 {
+    public function buildGrid(GridBuilderInterface $builder, array $options);
+
     /**
      * @return AdapterInterface
      */
@@ -64,5 +67,9 @@ interface GridInterface
 
     public function getOption(string $name, $default = null);
 
+    public function getOptions(): array;
+
     public function setSortField(ColumnInterface $field, $sortDir = 'ASC'): GridInterface;
+
+    public function setChildren($children);
 }

@@ -59,4 +59,10 @@ interface GridInterface
      * @return \Cwd\GridBundle\Column\ColumnInterface[]
      */
     public function all(): array;
+
+    public function hasOption(string $name);
+
+    public function getOption(string $name, $default = null);
+
+    public function setSortField(ColumnInterface $field, $sortDir = 'ASC'): GridInterface;
 }

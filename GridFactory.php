@@ -16,6 +16,7 @@ namespace Cwd\GridBundle;
 use Cwd\GridBundle\Adapter\AdapterInterface;
 use Cwd\GridBundle\Adapter\DoctrineAdapter;
 use Cwd\GridBundle\Exception\UnexpectedTypeException;
+use Cwd\GridBundle\Grid\GridInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Translation\TranslatorInterface;
 

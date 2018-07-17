@@ -258,7 +258,7 @@ abstract class AbstractColumn implements ColumnInterface
      * @param string      $name
      * @param string|null $default
      *
-     * @return misc
+     * @return mixed
      */
     public function getOption(string $name, $default = null)
     {

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Cwd\GridBundle\Adapter;
 
+use Cwd\GridBundle\Exception\AdapterException;
 use Cwd\GridBundle\Grid\GridInterface;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\QueryBuilder;

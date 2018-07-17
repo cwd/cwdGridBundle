@@ -134,7 +134,7 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
         return md5(serialize($data));
     }
 
-    public function setSortField(ColumnInterface $field, $sortDir = 'ASC')
+    public function setSortField(ColumnInterface $field, $sortDir = 'ASC'): GridInterface
     {
         foreach ($this->all() as $column) {
             $column->setIsSorted(false);
@@ -319,7 +319,7 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
             return $this->children[$name];
         }
 
-        throw new InvalidArgumentException(sprintf('The child with the name "%s" does not exist.', $name));
+        throw new \InvalidArgumentException(sprintf('The child with the name "%s" does not exist.', $name));
     }
 
     /**

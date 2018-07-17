@@ -30,10 +30,10 @@ class SampleGrid extends AbstractGrid
     public function buildGrid(GridBuilderInterface $builder, array $options)
     {
         $builder
-            ->add(new TextType('id', 'sample.id', ['label' => 'id', 'identifier' => true]))
+            ->add(new TextType('id', 'sample.id', ['label' => 'ID', 'identifier' => true, 'searchable' => false]))
             ->add(new TextType('firstname', 'sample.firstname', ['label' => 'Firstname']))
             ->add(new TextType('lastname', 'sample.lastname', ['label' => 'Lastname']))
-            ->add(new TextType('email', 'sample.email', ['label' => 'Email']));
+            ->add(new TextType('email', 'sample.email', ['label' => 'Email', 'sortable' => false]));
     }
 
     /**

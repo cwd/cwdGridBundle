@@ -263,6 +263,7 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
             'limit' => 20,
             'sortField' => null,
             'sortDir' => 'ASC',
+            'listLength' => [10, 20, 50, 100],
         ]);
 
         $resolver->setRequired([

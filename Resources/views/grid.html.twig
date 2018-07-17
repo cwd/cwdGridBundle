@@ -1,9 +1,24 @@
 {% set data = grid.data() %}
 <table id="{{ grid.id }}" class="table grid table-striped table-bordered table-condensed">
     <thead>
-    {% for column in grid if column.options.visible %}
-        <th class="{% if column.isSorted() %}sorted {{ column.getSortDir() }}{% endif %}" data-field="{{ column.name }}">{{ column.options.label|trans }}</th>
-    {% endfor %}
+        <tr>
+            {% for column in grid if column.options.visible %}
+                <th class="{% if column.options.sortable %}sortable{% endif %} {% if column.isSorted() %}sorted {{ column.getSortDir() }}{% endif %}" data-field="{{ column.name }}">{{ column.options.label|trans }}</th>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for column in grid if column.options.visible %}
+                {% if column.options.searchable %}
+                    {% set value = "" %}
+                    {% for field in grid.options.filter if field.property == column.name and field.value is not empty %}
+                        {% set value = field.value|escape %}
+                    {% endfor %}
+                    <th><input class="form-control filter" data-field="{{ column.name }}" data-operator="like" type="text" name="filters[]" value="{{ value }}" /></th>
+                {% else %}
+                    <th></th>
+                {% endif %}
+            {% endfor %}
+        </tr>
     </thead>
     <tbody>
     {% for row in data.data %}
@@ -16,7 +31,15 @@
     </tbody>
     <tfoot class="pagerfanta">
     <td colspan="{{ grid.all|length }}">
-        {{ pagerfanta(data.pager) }}
+        <div class="col-md-10">{{ pagerfanta(data.pager) }}</div>
+        <div class="col-md-2">
+            <select class="form-control listLengthSelector" style="margin-top: 20px;margin-bottom:20px">
+                {% for length in grid.options.listLength %}
+                    <option {% if length == grid.options.limit %}selected{% endif %}>{{ length }}</option>
+                {% endfor %}
+            </select>
+
+        </div>
     </td>
     </tfoot>
 </table>
@@ -25,8 +48,37 @@
     $(document).ready(function(){
         var $grid = $('table.grid');
         var $headers = $grid.find('th');
+        var $params = new URLSearchParams(window.location.search);
 
+        // Filter state
+        var getFilters = function() {
+            var $filters = [];
+            $params.delete('filter');
+            $grid.find(".filter").each(function (){
+                value = $(this).val();
+                if (value === '') {
+                    return;
+                }
+
+                $filters.push({
+                    'operator': $(this).data('operator'),
+                    'value': value,
+                    'property': $(this).data('field')
+                });
+            });
+            if ($filters.length > 0) {
+                $params.set('filter', encodeURIComponent(JSON.stringify($filters)));
+            }
+        };
+        getFilters();
+
+
+        // Sorting
         $headers.each(function(idx) {
+            if (!$(this).hasClass('sortable')) {
+                return;
+            }
+
             if ($(this).hasClass('sorted')) {
                 if ($(this).hasClass('ASC')) {
                     $(this).append('<i class="fas fa-sort-alpha-down pull-right"></i>');
@@ -36,20 +88,33 @@
             }
 
             $(this).on('click', function(e){
-                var params = {};
-                params.sortDir = 'ASC';
+                $params.set('sortDir', 'ASC');
                 if ($(this).hasClass('sorted')) {
                     if ($(this).hasClass('ASC')) {
-                        params.sortDir = 'DESC';
+                        $params.set('sortDir', 'DESC');
                     }
                 }
-                params.sortField = $(this).data('field');
-                params.page = 1;
+                $params.set('sortField', $(this).data('field'));
+                $params.set('page', 1);
 
-                document.location.href = '?' + $.param(params);
+                document.location.href = '?' + $params.toString();
             });
 
-            $(this).css('cursor', '');
+            $(this).css('cursor', 'pointer');
+        });
+
+        // List length
+        $grid.find('select.listLengthSelector').on('change', function(){
+            $params.set('limit', $(this).val());
+            $params.set('page', 1);
+            document.location.href = '?' + $params.toString();
+        });
+
+        // Filter trigger
+        $grid.find(".filter").on('change', function(){
+            getFilters();
+            $params.set('page', 1);
+            document.location.href = '?' + $params.toString();
         });
     });
 </script>

@@ -76,6 +76,7 @@ class DoctrineAdapter implements AdapterInterface
         $where = $queryBuilder->expr()->andX();
         $i = 0;
 
+        dump($filter);
         foreach ($filter as $filterSearch) {
             if (!$grid->has($filterSearch->property)) {
                 continue;

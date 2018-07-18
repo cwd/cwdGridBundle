@@ -20,7 +20,9 @@
     },
     "suggest": {
         "doctrine/orm": "For using DoctrineAdapter",
-        "symfony/translation": "For using Translations"
+        "symfony/translation": "For using Translations",
+        "symfony/form": "Needed for using EntityType",
+        "symfony/workflow": "Needed for using WorkflowActionType"
     },
     "autoload": {
         "psr-4": { "Cwd\\GridBundle\\": "" }

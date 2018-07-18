@@ -15,6 +15,8 @@ namespace Cwd\GridBundle\Resources\tests;
 
 use App\Entity\Company;
 use App\Entity\Sample;
+use Cwd\GridBundle\Column\SwitchType;
+use Cwd\GridBundle\Column\ActionType;
 use Cwd\GridBundle\Column\CheckboxType;
 use Cwd\GridBundle\Column\ChoiceType;
 use Cwd\GridBundle\Column\DateType;
@@ -39,7 +41,7 @@ class SampleGrid extends AbstractGrid
     {
         $builder
             ->add(new NumberType('id', 'sample.id', ['label' => 'ID', 'identifier' => true, 'searchable' => false]))
-            ->add(new ImageType('profile_image', 'sample.profile_image', ['label' => 'Image']))
+            //->add(new ImageType('profile_image', 'sample.profile_image', ['label' => 'Image']))
             ->add(new TextType('firstname', 'sample.firstname', ['label' => 'Firstname']))
             ->add(new TextType('lastname', 'sample.lastname', ['label' => 'Lastname']))
             ->add(new TextType('email', 'sample.email', ['label' => 'Email', 'sortable' => false]))
@@ -62,9 +64,42 @@ class SampleGrid extends AbstractGrid
             ))
             ->add(new ChoiceType('status', 'sample.status', [
                 'label' => 'State',
+                'cellAlign' => 'center',
                 'data' => [['value' => 'active'], ['value' => 'inactive']],
             ]))
-            ->add(new CheckboxType('active', 'sample.active', ['label' => 'Active']));
+            //->add(new CheckboxType('active', 'sample.active', ['label' => 'Active']))
+            ->add(new SwitchType('active', 'sample.active', [
+                'label' => 'Active',
+                'route' => 'test',
+            ]))
+            ->add(new ActionType(
+                'actions',
+                'sample.id',
+                [
+                    'label' => '',
+                    'width' => '320px',
+                    'actions' => [
+                        [
+                            'route' => 'test',
+                            'class' => 'btn-warning',
+                            'icon' => 'fa-copy',
+                            'title' => 'generic.duplicate',
+                        ],
+                        [
+                            'route' => 'test',
+                            'class' => 'btn-primary',
+                            'icon' => 'fa-edit',
+                            'title' => 'generic.edit',
+                        ],
+                        [
+                            'route' => 'test',
+                            'class' => 'btn-danger deleterow',
+                            'icon' => 'fa-trash-o',
+                            'title' => 'generic.delete',
+                        ],
+                    ],
+                ]
+            ));
     }
 
     /**

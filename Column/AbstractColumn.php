@@ -180,9 +180,9 @@ abstract class AbstractColumn implements ColumnInterface
             'visible' => true,
             'sortable' => true,
             'searchable' => true,
-            'width' => null,
-            'minWidth' => null,
-            'maxWidth' => null,
+            'width' => 'auto',
+            'minWidth' => 'auto',
+            'maxWidth' => 'auto',
             'ellipsis' => true,
             'translation_domain' => null,
             'translatable' => false,
@@ -192,6 +192,32 @@ abstract class AbstractColumn implements ColumnInterface
         ));
 
         $resolver->setAllowedTypes('attr', 'array');
+    }
+
+    public function getHeaderStyleOptions()
+    {
+        $options = [
+            'align',
+            'width',
+            'minWidth',
+            'maxWidth',
+        ];
+
+        $optionMap = [];
+        foreach ($options as $key) {
+            $value = $this->getOption($key);
+            $key = ('align' == $key) ? 'text-align' : $key;
+            if (!empty($value)) {
+                $optionMap[$key] = $value;
+            }
+        }
+        dump($optionMap);
+
+        return $optionMap;
+    }
+
+    protected function getOptionArray(array $keys = [])
+    {
     }
 
     /**
@@ -332,7 +358,7 @@ abstract class AbstractColumn implements ColumnInterface
         return $this->filter;
     }
 
-    public function setFilter($filter): AbstractColumn
+    public function setFilter($filter): ColumnInterface
     {
         $this->filter = $filter;
 

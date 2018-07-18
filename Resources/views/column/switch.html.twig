@@ -1,0 +1,18 @@
+{% spaceless %}
+<input
+        type="checkbox"
+        id="switch_{{ primary }}"
+        name="switch_{{ primary }}"
+        data-id="{{ primary }}"
+        data-uri="{{ path(route, {id: primary}) }}"
+        {% for attr,val in attributes %}
+            {% if attr == 'data-on-text' or attr == 'data-off-text' %}
+                {{ attr }}="{{ val|trans }}"
+            {% else %}
+                {{ attr }}="{{ val }}"
+            {% endif %}
+        {% endfor %}
+        value="1"
+        {% if value %}checked="checked"{% endif %}
+        >
+{% endspaceless %}

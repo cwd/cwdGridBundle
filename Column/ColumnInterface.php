@@ -67,4 +67,6 @@ interface ColumnInterface
     public function isSorted(): bool;
 
     public function getSortDir(): ?string;
+
+    public function setFilter($filter): ColumnInterface;
 }

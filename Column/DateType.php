@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Cwd\GridBundle\Column;
 
-use Cwd\GridBundle\Grid\Exception\InvalidArgumentException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -59,7 +58,7 @@ class DateType extends AbstractColumn
         }
 
         if (!$value instanceof \DateTime) {
-            throw new InvalidArgumentException('%s is not of expected \DateTime', $this->getName());
+            throw new \InvalidArgumentException('%s is not of expected \DateTime', $this->getName());
         }
 
         return $value->format($this->getOption('format')['read']);
@@ -98,7 +97,7 @@ class DateType extends AbstractColumn
         ]);
     }
 
-    public function setFilter($filter): AbstractColumn
+    public function setFilter($filter): ColumnInterface
     {
         $this->filter[] = $filter;
 

@@ -2,9 +2,17 @@
 <table id="{{ grid.id }}" class="table grid table-striped table-bordered table-condensed">
     <thead>
         <tr>
-            {% for column in grid if column.options.visible %}
-                <th class="{% if column.options.sortable %}sortable{% endif %} {% if column.isSorted() %}sorted {{ column.getSortDir() }}{% endif %}" data-field="{{ column.name }}">{{ column.options.label|trans }}</th>
-            {% endfor %}
+            {%- for column in grid if column.options.visible -%}
+                {% spaceless %}
+                {% set class = [column.options.attr.class|default('')] %}
+                {% if column.options.sortable %}{% set class = class|merge(['sortable']) %}{% endif %}
+                {% if column.isSorted() %}{% set class = class|merge(['sorted '~column.getSortDir()]) %}{% endif %}
+                <th class="{{- class|join(' ') -}}"
+                    style="{%- for key,value in column.getHeaderStyleOptions() -%}{{ key }}:{{ value }};{%- endfor -%}"
+                    data-field="{{ column.name }}"
+                {%- for key,value in column.options.attr if key != 'class' -%}{{ key }}="{{ value }}" {% endfor %}>{{ column.options.label|trans }}</th>
+                {% endspaceless %}
+            {%- endfor -%}
         </tr>
         <tr>
             {% for column in grid if column.options.visible %}
@@ -21,7 +29,7 @@
     {% for row in data.data %}
         <tr>
             {% for column in grid if column.options.visible %}
-                <td class="{% if column.options.ellipsis %}ellipsis{% endif %}" ><div class="wrap">{{ attribute(row, column.name)|raw }}</div></td>
+                <td class="{% if column.options.ellipsis %}ellipsis{% endif %}" style="text-align:{{ column.options.cellAlign }}">{{ attribute(row, column.name)|raw }}</td>
             {% endfor %}
         </tr>
     {% endfor %}
@@ -108,10 +116,20 @@
         });
 
         // Filter trigger
+        var filterTimeout;
+        var filterPage = function() {
+            clearTimeout(filterTimeout);
+            filterTimeout = setTimeout(function(){
+                getFilters();
+                $params.set('page', 1);
+                document.location.href = '?' + $params.toString();
+            }, 500);
+        };
         $grid.find(".filter").on('change', function(){
-            getFilters();
-            $params.set('page', 1);
-            document.location.href = '?' + $params.toString();
+            filterPage();
+        });
+        $grid.find(".filter").on('keyup', function(){
+            filterPage();
         });
     });
 </script>

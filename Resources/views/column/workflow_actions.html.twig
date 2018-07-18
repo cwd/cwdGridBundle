@@ -1,0 +1,23 @@
+<div class="pull-{{ align }}">
+    <div class="btn-group btn-group-solid btn-block hidden-xs">
+        {% for action in actions %}
+            {% if (action.transition is defined and workflow_can(object, action.transition) or action.transition is not defined) %}
+                <a href="{{ path(action.route, action.route_params|default({})|merge({ id: value })) }}" class="btn {{ action.class|default('btn-primary') }} btn-xs tooltips" data-placement="top" data-container="body" data-original-title="{{ action.title|default('Action')|trans }}"><i class="fa {{ action.icon|default('fa-edit') }}"></i><span class="hidden-xs"> {{ action.title|default(' ')|trans }} </span></a>
+            {% endif %}
+
+        {% endfor %}
+    </div>
+    <div class="btn-group visible-xs">
+        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+            {{ "Actions"|trans }}
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            {% for action in actions %}
+                {% if (action.transition is defined and workflow_can(object, action.transition) or action.transition is not defined) %}
+                    <li><a href="{{ path(action.route, action.route_params|default({})|merge({ id: value })) }}" class="tooltips" data-placement="top" data-container="body" data-original-title="{{ action.title|default('Action')|trans }}"><i class="fa {{ action.icon|default('fa-edit') }}"></i> {{ action.title|default(' ')|trans }}</li></a>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+</div>

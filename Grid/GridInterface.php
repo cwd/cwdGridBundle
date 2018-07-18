@@ -14,9 +14,13 @@ declare(strict_types=1);
 namespace Cwd\GridBundle\Grid;
 
 use Cwd\GridBundle\Adapter\AdapterInterface;
+use Cwd\GridBundle\Column\ColumnInterface;
+use Cwd\GridBundle\GridBuilderInterface;
 
 interface GridInterface
 {
+    public function buildGrid(GridBuilderInterface $builder, array $options);
+
     /**
      * @return AdapterInterface
      */
@@ -32,4 +36,40 @@ interface GridInterface
     public function setTwig(\Twig_Environment $twig);
 
     public function getTwig(): \Twig_Environment;
+
+    /**
+     * @param string $name
+     *
+     * @return ColumnInterface
+     */
+    public function get(string $name): ColumnInterface;
+
+    /**
+     * @param string $name
+     *
+     * @return $this
+     */
+    public function remove(string $name): GridInterface;
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function has(string $name): bool;
+
+    /**
+     * @return \Cwd\GridBundle\Column\ColumnInterface[]
+     */
+    public function all(): array;
+
+    public function hasOption(string $name);
+
+    public function getOption(string $name, $default = null);
+
+    public function getOptions(): array;
+
+    public function setSortField(ColumnInterface $field, $sortDir = 'ASC'): GridInterface;
+
+    public function setChildren($children);
 }

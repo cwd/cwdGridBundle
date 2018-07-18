@@ -13,16 +13,32 @@
     "minimum-stability": "stable",
     "require": {
         "php" : "^7.1.3",
-        "symfony/framework-bundle": "~2.7|~3.0|^4.0",
+        "symfony/framework-bundle": "~2.8|~3.0|^4.0",
+        "symfony/options-resolver": "~2.8|~3.0|^4.0",
         "symfony/twig-bundle": "~2.7|~3.0|^4.0",
-        "white-october/pagerfanta-bundle": "^1.0",
-
+        "white-october/pagerfanta-bundle": "^1.0"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "@stable",
+        "symfony/orm-pack": "*",
+        "symfony/css-selector": "@stable"
     },
     "suggest": {
-        "doctrine/orm": "For using DoctrineAdapter"
+        "doctrine/orm": "For using DoctrineAdapter",
+        "symfony/translation": "For using Translations",
+        "symfony/form": "Needed for using EntityType",
+        "symfony/workflow": "Needed for using WorkflowActionType"
     },
     "autoload": {
-        "psr-4": { "Cwd\\GridBundle\\": "" }
+        "psr-4": { "Cwd\\GridBundle\\": "" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Cwd\\GridBundle\\Tests\\": "/Tests/"
+        }
     }
 
 }

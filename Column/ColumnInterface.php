@@ -59,4 +59,14 @@ interface ColumnInterface
      * @return mixed
      */
     public function getValue($object, $field, $primary, $accessor);
+
+    public function setIsSorted(bool $state): ColumnInterface;
+
+    public function setSortDir(?string $dir = null): ColumnInterface;
+
+    public function isSorted(): bool;
+
+    public function getSortDir(): ?string;
+
+    public function setFilter($filter): ColumnInterface;
 }

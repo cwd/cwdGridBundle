@@ -43,6 +43,12 @@ abstract class AbstractColumn implements ColumnInterface
      */
     protected $translator;
 
+    protected $isSorted = false;
+
+    protected $sortDir = null;
+
+    protected $filter = null;
+
     /**
      * AbstractColumn constructor.
      *
@@ -76,6 +82,30 @@ abstract class AbstractColumn implements ColumnInterface
         return $this->field;
     }
 
+    public function setIsSorted(bool $state): ColumnInterface
+    {
+        $this->isSorted = $state;
+
+        return $this;
+    }
+
+    public function setSortDir(?string $dir = null): ColumnInterface
+    {
+        $this->sortDir = $dir;
+
+        return $this;
+    }
+
+    public function isSorted(): bool
+    {
+        return $this->isSorted;
+    }
+
+    public function getSortDir(): ?string
+    {
+        return $this->sortDir;
+    }
+
     /**
      * @param mixed             $value
      * @param mixed             $object
@@ -104,6 +134,25 @@ abstract class AbstractColumn implements ColumnInterface
 
     /**
      * @param \Twig_Environment $twig
+     *
+     * @return string
+     *
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function renderFilter(\Twig_Environment $twig)
+    {
+        $value = (null !== $this->getFilter() && '' != isset($this->getFilter()->value)) ? $this->getFilter()->value : '';
+
+        return $twig->render('@CwdGrid/filter/text.html.twig', [
+            'column' => $this,
+            'value' => $value,
+        ]);
+    }
+
+    /**
+     * @param \Twig_Environment $twig
      * @param string            $template
      * @param array             $options
      *
@@ -124,49 +173,46 @@ abstract class AbstractColumn implements ColumnInterface
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
+            'identifier' => false,
+            'label' => null,
             'align' => 'left',
             'cellAlign' => 'left',
-            'cellTip' => null,
-            'cls' => null,
-            'draggable' => null,
-            'editable' => null,
-            'ellipsis' => true,
-            'flex' => 1,
-            'hidden' => false,
-            'index' => null,
-            'lockable' => null,
-            'locked' => null,
-            'maxWidth' => null,
-            'menu' => null,
-            'minWidth' => null,
-            'render' => null,
-            'resizable' => null,
-            'rightLocked' => null,
+            'visible' => true,
             'sortable' => true,
-            'title' => null,
-            'type' => null,
-            'vtype' => null,
-            'width' => null,
             'searchable' => true,
-            'filter' => [
-                'header' => true,
-                'headerNote' => true,
-            ],
-
+            'width' => 'auto',
+            'minWidth' => 'auto',
+            'maxWidth' => 'auto',
+            'ellipsis' => true,
             'translation_domain' => null,
             'translatable' => false,
-            'attr' => array(),
+            'attr' => [],
             'template' => null,
-
-            // Legacy
-            'identifier' => null,
-            'label' => null,
-
-            // NEW
-            'visible' => true,
+            'operator' => 'like',
         ));
 
         $resolver->setAllowedTypes('attr', 'array');
+    }
+
+    public function getHeaderStyleOptions()
+    {
+        $options = [
+            'align',
+            'width',
+            'minWidth',
+            'maxWidth',
+        ];
+
+        $optionMap = [];
+        foreach ($options as $key) {
+            $value = $this->getOption($key);
+            $key = ('align' != $key) ?: 'text-align';
+            if (!empty($value)) {
+                $optionMap[$key] = $value;
+            }
+        }
+
+        return $optionMap;
     }
 
     /**
@@ -185,7 +231,7 @@ abstract class AbstractColumn implements ColumnInterface
         }
 
         if ($this->getOption('label')) {
-            $printOptions['title'] = $this->translator->trans($this->getOption('label'), [], $this->getOption('translation_domain'));
+            $printOptions['title'] = $this->getOption('label');
         }
 
         $options = $this->options;
@@ -238,6 +284,16 @@ abstract class AbstractColumn implements ColumnInterface
         return $accessor->getValue($object, $field);
     }
 
+    public function viewToData($value)
+    {
+        return $value;
+    }
+
+    public function dataToView($value)
+    {
+        return $value;
+    }
+
     /**
      * @param string $name
      *
@@ -252,7 +308,7 @@ abstract class AbstractColumn implements ColumnInterface
      * @param string      $name
      * @param string|null $default
      *
-     * @return misc
+     * @return mixed
      */
     public function getOption(string $name, $default = null)
     {
@@ -267,10 +323,19 @@ abstract class AbstractColumn implements ColumnInterface
         return $this->options;
     }
 
+    public function translate($key, $domain = null)
+    {
+        if (null === $this->getTranslator()) {
+            return $key;
+        }
+
+        return $this->getTranslator()->trans($key, $domain);
+    }
+
     /**
      * @return TranslatorInterface
      */
-    public function getTranslator(): TranslatorInterface
+    public function getTranslator(): ?TranslatorInterface
     {
         return $this->translator;
     }
@@ -281,5 +346,17 @@ abstract class AbstractColumn implements ColumnInterface
     public function setTranslator(TranslatorInterface $translator)
     {
         $this->translator = $translator;
+    }
+
+    public function getFilter()
+    {
+        return $this->filter;
+    }
+
+    public function setFilter($filter): ColumnInterface
+    {
+        $this->filter = $filter;
+
+        return $this;
     }
 }

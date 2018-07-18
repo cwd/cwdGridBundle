@@ -1,0 +1,14 @@
+<select class="form-control filter" data-field="{{ column.name }}" data-operator="eq" name="filters[]">
+    <option value=""></option>
+{% for element in data %}
+    {% spaceless %}
+    <option {% if (column.dataToView(element.value) == value) %}selected{% endif %} value="{{ column.dataToView(element.value) }}">
+        {% if element.label is defined %}
+            {{ element.label }}
+        {% else %}
+            {{ element.value }}
+        {% endif %}
+    </option>
+    {% endspaceless %}
+{% endfor %}
+</select>

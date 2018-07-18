@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Cwd\GridBundle\Adapter;
 
+use Cwd\GridBundle\Exception\AdapterException;
 use Cwd\GridBundle\Grid\GridInterface;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\QueryBuilder;
@@ -27,6 +28,15 @@ class DoctrineAdapter implements AdapterInterface
     public function getData(GridInterface $grid): Pagerfanta
     {
         $queryBuilder = $grid->getQueryBuilder($this->getDoctrineRegistry()->getManager(), $grid->all());
+
+        if (null !== $grid->getOption('sortField')) {
+            $field = $grid->getOption('sortField');
+            if ($grid->has($field)) {
+                $column = $grid->get($field);
+                $grid->setSortField($column, $grid->getOption('sortDir'));
+                $queryBuilder->orderBy($column->getField(), $grid->getOption('sortDir'));
+            }
+        }
 
         if ($grid->getOption('filter', false)) {
             $this->addSearch($queryBuilder, $grid);
@@ -74,6 +84,7 @@ class DoctrineAdapter implements AdapterInterface
             $property = sprintf(':%s%s', $filterSearch->property, $i);
 
             $column = $grid->get($filterSearch->property);
+            $filterSearch->value = $column->viewToData($filterSearch->value);
 
             switch ($filterSearch->operator) {
                 case 'eq':

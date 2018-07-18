@@ -1,22 +1,135 @@
 {% set data = grid.data() %}
 <table id="{{ grid.id }}" class="table grid table-striped table-bordered table-condensed">
     <thead>
-    {% for column in grid if column.options.visible %}
-        <th>{{ column.options.label|trans }}</th>
-    {% endfor %}
+        <tr>
+            {%- for column in grid if column.options.visible -%}
+                {% spaceless %}
+                {% set class = [column.options.attr.class|default('')] %}
+                {% if column.options.sortable %}{% set class = class|merge(['sortable']) %}{% endif %}
+                {% if column.isSorted() %}{% set class = class|merge(['sorted '~column.getSortDir()]) %}{% endif %}
+                <th class="{{- class|join(' ') -}}"
+                    style="{%- for key,value in column.getHeaderStyleOptions() -%}{{ key }}:{{ value }};{%- endfor -%}"
+                    data-field="{{ column.name }}"
+                {%- for key,value in column.options.attr if key != 'class' -%}{{ key }}="{{ value }}" {% endfor %}>{{ column.options.label|trans }}</th>
+                {% endspaceless %}
+            {%- endfor -%}
+        </tr>
+        <tr>
+            {% for column in grid if column.options.visible %}
+                {% if column.options.searchable %}
+                    {% set value = "" %}
+                    <th>{{ column.renderFilter(grid.twig)|raw }}</th>
+                {% else %}
+                    <th></th>
+                {% endif %}
+            {% endfor %}
+        </tr>
     </thead>
     <tbody>
     {% for row in data.data %}
         <tr>
             {% for column in grid if column.options.visible %}
-                <td class="{% if column.options.ellipsis %}ellipsis{% endif %}" ><div class="wrap" style="max-width:100px">{{ attribute(row, column.name)|raw }}</div></td>
+                <td class="{% if column.options.ellipsis %}ellipsis{% endif %}" style="text-align:{{ column.options.cellAlign }}">{{ attribute(row, column.name)|raw }}</td>
             {% endfor %}
         </tr>
     {% endfor %}
     </tbody>
     <tfoot class="pagerfanta">
     <td colspan="{{ grid.all|length }}">
-        {{ pagerfanta(data.pager) }}
+        <div class="col-md-10">{{ pagerfanta(data.pager, grid.options.pagerfantaOptions) }}</div>
+        <div class="col-md-2">
+            <select class="form-control listLengthSelector" style="margin-top: 20px;margin-bottom:20px">
+                {% for length in grid.options.listLength %}
+                    <option {% if length == grid.options.limit %}selected{% endif %}>{{ length }}</option>
+                {% endfor %}
+            </select>
+
+        </div>
     </td>
     </tfoot>
 </table>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        var $grid = $('table.grid');
+        var $headers = $grid.find('th');
+        var $params = new URLSearchParams(window.location.search);
+
+        // Filter state
+        var getFilters = function() {
+            var $filters = [];
+            $params.delete('filter');
+            $grid.find(".filter").each(function (){
+                value = $(this).val();
+                if (value === '') {
+                    return;
+                }
+
+                $filters.push({
+                    'operator': $(this).data('operator'),
+                    'value': value,
+                    'property': $(this).data('field')
+                });
+            });
+            if ($filters.length > 0) {
+                $params.set('filter', encodeURIComponent(JSON.stringify($filters)));
+            }
+        };
+        getFilters();
+
+
+        // Sorting
+        $headers.each(function(idx) {
+            if (!$(this).hasClass('sortable')) {
+                return;
+            }
+
+            if ($(this).hasClass('sorted')) {
+                if ($(this).hasClass('ASC')) {
+                    $(this).append('<i class="fas fa-sort-alpha-down pull-right"></i>');
+                } else if ($(this).hasClass('DESC')) {
+                    $(this).append('<i class="fas fa-sort-alpha-up pull-right"></i>');
+                }
+            }
+
+            $(this).on('click', function(e){
+                $params.set('sortDir', 'ASC');
+                if ($(this).hasClass('sorted')) {
+                    if ($(this).hasClass('ASC')) {
+                        $params.set('sortDir', 'DESC');
+                    }
+                }
+                $params.set('sortField', $(this).data('field'));
+                $params.set('page', 1);
+
+                document.location.href = '?' + $params.toString();
+            });
+
+            $(this).css('cursor', 'pointer');
+        });
+
+        // List length
+        $grid.find('select.listLengthSelector').on('change', function(){
+            $params.set('limit', $(this).val());
+            $params.set('page', 1);
+            document.location.href = '?' + $params.toString();
+        });
+
+        // Filter trigger
+        var filterTimeout;
+        var filterPage = function() {
+            clearTimeout(filterTimeout);
+            filterTimeout = setTimeout(function(){
+                getFilters();
+                $params.set('page', 1);
+                document.location.href = '?' + $params.toString();
+            }, 500);
+        };
+        $grid.find(".filter").on('change', function(){
+            filterPage();
+        });
+        $grid.find(".filter").on('keyup', function(){
+            filterPage();
+        });
+    });
+</script>

@@ -22,21 +22,18 @@ declare(strict_types=1);
 namespace Cwd\GridBundle\Twig;
 
 use Cwd\GridBundle\Grid\GridInterface;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 class GridExtension extends \Twig_Extension
 {
     protected $jsOptions = [];
-    protected $router;
 
-    public function __construct(Router $router, $options = [])
+    public function __construct($options = [])
     {
         if (!isset($options['js_options'])) {
             $options['js_options'] = [];
         }
 
         $this->jsOptions = $options['js_options'];
-        $this->router = $router;
     }
 
     /**

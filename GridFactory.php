@@ -16,6 +16,7 @@ namespace Cwd\GridBundle;
 use Cwd\GridBundle\Adapter\AdapterInterface;
 use Cwd\GridBundle\Adapter\DoctrineAdapter;
 use Cwd\GridBundle\Exception\UnexpectedTypeException;
+use Cwd\GridBundle\Grid\GridInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -64,6 +65,10 @@ class GridFactory
 
         $type->buildGrid($builder, array_merge($type->getOptions(), $options));
         $type->setChildren($builder->children);
+
+        foreach ($type->getOption('filter') as $filter) {
+            $type->get($filter->property)->setFilter($filter);
+        }
 
         return $type;
     }

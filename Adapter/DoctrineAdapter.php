@@ -76,7 +76,6 @@ class DoctrineAdapter implements AdapterInterface
         $where = $queryBuilder->expr()->andX();
         $i = 0;
 
-        dump($filter);
         foreach ($filter as $filterSearch) {
             if (!$grid->has($filterSearch->property)) {
                 continue;
@@ -85,6 +84,7 @@ class DoctrineAdapter implements AdapterInterface
             $property = sprintf(':%s%s', $filterSearch->property, $i);
 
             $column = $grid->get($filterSearch->property);
+            $filterSearch->value = $column->viewToData($filterSearch->value);
 
             switch ($filterSearch->operator) {
                 case 'eq':

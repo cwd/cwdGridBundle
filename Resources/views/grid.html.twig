@@ -10,10 +10,7 @@
             {% for column in grid if column.options.visible %}
                 {% if column.options.searchable %}
                     {% set value = "" %}
-                    {% for field in grid.options.filter if field.property == column.name and field.value is not empty %}
-                        {% set value = field.value|escape %}
-                    {% endfor %}
-                    <th><input class="form-control filter" data-field="{{ column.name }}" data-operator="like" type="text" name="filters[]" value="{{ value }}" /></th>
+                    <th>{{ column.renderFilter(grid.twig)|raw }}</th>
                 {% else %}
                     <th></th>
                 {% endif %}
@@ -24,7 +21,7 @@
     {% for row in data.data %}
         <tr>
             {% for column in grid if column.options.visible %}
-                <td class="{% if column.options.ellipsis %}ellipsis{% endif %}" ><div class="wrap" style="max-width:100px">{{ attribute(row, column.name)|raw }}</div></td>
+                <td class="{% if column.options.ellipsis %}ellipsis{% endif %}" ><div class="wrap">{{ attribute(row, column.name)|raw }}</div></td>
             {% endfor %}
         </tr>
     {% endfor %}

@@ -13,11 +13,19 @@ declare(strict_types=1);
 
 namespace Cwd\GridBundle\Resources\tests;
 
+use App\Entity\Company;
 use App\Entity\Sample;
+use Cwd\GridBundle\Column\CheckboxType;
+use Cwd\GridBundle\Column\ChoiceType;
+use Cwd\GridBundle\Column\DateType;
+use Cwd\GridBundle\Column\EntityType;
+use Cwd\GridBundle\Column\ImageType;
+use Cwd\GridBundle\Column\NumberType;
 use Cwd\GridBundle\Column\TextType;
 use Cwd\GridBundle\Grid\AbstractGrid;
 use Cwd\GridBundle\GridBuilderInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -30,10 +38,33 @@ class SampleGrid extends AbstractGrid
     public function buildGrid(GridBuilderInterface $builder, array $options)
     {
         $builder
-            ->add(new TextType('id', 'sample.id', ['label' => 'ID', 'identifier' => true, 'searchable' => false]))
+            ->add(new NumberType('id', 'sample.id', ['label' => 'ID', 'identifier' => true, 'searchable' => false]))
+            ->add(new ImageType('profile_image', 'sample.profile_image', ['label' => 'Image']))
             ->add(new TextType('firstname', 'sample.firstname', ['label' => 'Firstname']))
             ->add(new TextType('lastname', 'sample.lastname', ['label' => 'Lastname']))
-            ->add(new TextType('email', 'sample.email', ['label' => 'Email', 'sortable' => false]));
+            ->add(new TextType('email', 'sample.email', ['label' => 'Email', 'sortable' => false]))
+            ->add(new DateType('born_at', 'sample.bornAt', ['label' => 'Born', 'format' => ['read' => 'd.m.Y']]))
+            ->add(new EntityType(
+                'company_name',
+                'company.name',
+                [
+                    'label' => 'Company',
+                    'class' => Company::class,
+                    'em' => $this->getAdapter()->getDoctrineRegistry()->getManager(),
+                    'query_builder' => function (EntityRepository $entityRepository) {
+                        return $entityRepository->createQueryBuilder('c')
+                            ->orderBy('c.name', 'ASC');
+                    },
+                    'choice_label' => function ($category) {
+                        return $category->getName();
+                    },
+                ]
+            ))
+            ->add(new ChoiceType('status', 'sample.status', [
+                'label' => 'State',
+                'data' => [['value' => 'active'], ['value' => 'inactive']],
+            ]))
+            ->add(new CheckboxType('active', 'sample.active', ['label' => 'Active']));
     }
 
     /**
@@ -47,7 +78,10 @@ class SampleGrid extends AbstractGrid
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = $objectManager
             ->getRepository(Sample::class)
-            ->createQueryBuilder('sample');
+            ->createQueryBuilder('sample')
+            ->select('sample', 'company')
+            ->leftJoin('sample.company', 'company')
+        ;
 
         return $queryBuilder;
     }

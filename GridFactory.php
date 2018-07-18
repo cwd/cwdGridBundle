@@ -66,6 +66,10 @@ class GridFactory
         $type->buildGrid($builder, array_merge($type->getOptions(), $options));
         $type->setChildren($builder->children);
 
+        foreach ($type->getOption('filter') as $filter) {
+            $type->get($filter->property)->setFilter($filter);
+        }
+
         return $type;
     }
 

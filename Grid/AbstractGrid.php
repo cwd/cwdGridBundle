@@ -258,7 +258,7 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
     {
         $resolver->setDefaults([
             'template' => '@CwdGrid/Grid/template.html.twig',
-            'filter' => null,
+            'filter' => [],
             'page' => 1,
             'limit' => 20,
             'sortField' => null,
@@ -269,6 +269,8 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
         $resolver->setRequired([
             'template',
         ]);
+
+        $resolver->setAllowedTypes('filter', 'array');
     }
 
     public function getColumnDefinition()

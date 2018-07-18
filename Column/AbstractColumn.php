@@ -47,6 +47,8 @@ abstract class AbstractColumn implements ColumnInterface
 
     protected $sortDir = null;
 
+    protected $filter = null;
+
     /**
      * AbstractColumn constructor.
      *
@@ -132,6 +134,25 @@ abstract class AbstractColumn implements ColumnInterface
 
     /**
      * @param \Twig_Environment $twig
+     *
+     * @return string
+     *
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function renderFilter(\Twig_Environment $twig)
+    {
+        $value = (null !== $this->getFilter() && '' != isset($this->getFilter()->value)) ? $this->getFilter()->value : '';
+
+        return $twig->render('@CwdGrid/filter/text.html.twig', [
+            'column' => $this,
+            'value' => $value,
+        ]);
+    }
+
+    /**
+     * @param \Twig_Environment $twig
      * @param string            $template
      * @param array             $options
      *
@@ -160,16 +181,14 @@ abstract class AbstractColumn implements ColumnInterface
             'sortable' => true,
             'searchable' => true,
             'width' => null,
+            'minWidth' => null,
+            'maxWidth' => null,
             'ellipsis' => true,
             'translation_domain' => null,
             'translatable' => false,
             'attr' => [],
             'template' => null,
-
-            'filter' => [
-                'header' => true,
-                'headerNote' => true,
-            ],
+            'operator' => 'like',
         ));
 
         $resolver->setAllowedTypes('attr', 'array');
@@ -191,7 +210,7 @@ abstract class AbstractColumn implements ColumnInterface
         }
 
         if ($this->getOption('label')) {
-            $printOptions['title'] = $this->translator->trans($this->getOption('label'), [], $this->getOption('translation_domain'));
+            $printOptions['title'] = $this->getOption('label');
         }
 
         $options = $this->options;
@@ -244,6 +263,16 @@ abstract class AbstractColumn implements ColumnInterface
         return $accessor->getValue($object, $field);
     }
 
+    public function viewToData($value)
+    {
+        return $value;
+    }
+
+    public function dataToView($value)
+    {
+        return $value;
+    }
+
     /**
      * @param string $name
      *
@@ -273,10 +302,19 @@ abstract class AbstractColumn implements ColumnInterface
         return $this->options;
     }
 
+    public function translate($key, $domain = null)
+    {
+        if (null === $this->getTranslator()) {
+            return $key;
+        }
+
+        return $this->getTranslator()->trans($key, $domain);
+    }
+
     /**
      * @return TranslatorInterface
      */
-    public function getTranslator(): TranslatorInterface
+    public function getTranslator(): ?TranslatorInterface
     {
         return $this->translator;
     }
@@ -287,5 +325,17 @@ abstract class AbstractColumn implements ColumnInterface
     public function setTranslator(TranslatorInterface $translator)
     {
         $this->translator = $translator;
+    }
+
+    public function getFilter()
+    {
+        return $this->filter;
+    }
+
+    public function setFilter($filter): AbstractColumn
+    {
+        $this->filter = $filter;
+
+        return $this;
     }
 }

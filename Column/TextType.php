@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Cwd\GridBundle\Column;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
-
 /**
  * Class TextType.
  *
@@ -22,19 +20,4 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class TextType extends AbstractColumn
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-
-        $resolver->setDefaults(array(
-            'align' => 'left',
-            'cellAlign' => 'left',
-            'type' => 'string',
-        ));
-
-        $resolver->setAllowedTypes('attr', 'array');
-    }
 }

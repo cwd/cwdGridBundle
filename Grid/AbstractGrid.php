@@ -264,6 +264,7 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
             'sortField' => null,
             'sortDir' => 'ASC',
             'listLength' => [10, 20, 50, 100],
+            'pagerfantaOptions' => [],
         ]);
 
         $resolver->setRequired([
@@ -271,6 +272,7 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
         ]);
 
         $resolver->setAllowedTypes('filter', 'array');
+        $resolver->setAllowedTypes('pagerfantaOptions', 'array');
     }
 
     public function getColumnDefinition()

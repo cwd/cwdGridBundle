@@ -18,6 +18,11 @@
         "symfony/twig-bundle": "~2.7|~3.0|^4.0",
         "white-october/pagerfanta-bundle": "^1.0"
     },
+    "require-dev": {
+        "symfony/phpunit-bridge": "@stable",
+        "symfony/orm-pack": "*",
+        "symfony/css-selector": "@stable"
+    },
     "suggest": {
         "doctrine/orm": "For using DoctrineAdapter",
         "symfony/translation": "For using Translations",
@@ -25,7 +30,15 @@
         "symfony/workflow": "Needed for using WorkflowActionType"
     },
     "autoload": {
-        "psr-4": { "Cwd\\GridBundle\\": "" }
+        "psr-4": { "Cwd\\GridBundle\\": "" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Cwd\\GridBundle\\Tests\\": "/Tests/"
+        }
     }
 
 }

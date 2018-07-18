@@ -36,7 +36,7 @@
     </tbody>
     <tfoot class="pagerfanta">
     <td colspan="{{ grid.all|length }}">
-        <div class="col-md-10">{{ pagerfanta(data.pager) }}</div>
+        <div class="col-md-10">{{ pagerfanta(data.pager, grid.options.pagerfantaOptions) }}</div>
         <div class="col-md-2">
             <select class="form-control listLengthSelector" style="margin-top: 20px;margin-bottom:20px">
                 {% for length in grid.options.listLength %}

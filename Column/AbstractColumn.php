@@ -206,18 +206,13 @@ abstract class AbstractColumn implements ColumnInterface
         $optionMap = [];
         foreach ($options as $key) {
             $value = $this->getOption($key);
-            $key = ('align' == $key) ? 'text-align' : $key;
+            $key = ('align' != $key) ?: 'text-align';
             if (!empty($value)) {
                 $optionMap[$key] = $value;
             }
         }
-        dump($optionMap);
 
         return $optionMap;
-    }
-
-    protected function getOptionArray(array $keys = [])
-    {
     }
 
     /**

@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Cwd\GridBundle\Resources\tests;
+namespace Cwd\GridBundle\Tests;
 
 use App\Entity\Company;
 use App\Entity\Sample;

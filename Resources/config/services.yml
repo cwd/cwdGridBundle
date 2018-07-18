@@ -14,8 +14,11 @@ services:
 
     Cwd\GridBundle\Twig\GridExtension:
         arguments:
-            - "@router"
 #            - "%cwd.fancygrid.config%"
         public: false
         tags:
             - { name: twig.extension }
+
+    test.twig.extension.pagerfanta:
+        alias: twig.extension.pagerfanta
+        public: true

@@ -53,7 +53,7 @@ class GridExtension extends \Twig_Extension
     {
         $options = array_merge($options, $this->jsOptions);
 
-        return $twig->render('@CwdGrid/grid.html.twig', [
+        return $twig->render($grid->getOption('template'), [
             'grid' => $grid,
             'options' => $options,
             'pager' => '',

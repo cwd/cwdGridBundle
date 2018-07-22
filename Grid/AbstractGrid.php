@@ -257,7 +257,7 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'template' => '@CwdGrid/Grid/template.html.twig',
+            'template' => '@CwdGrid/grid.html.twig',
             'filter' => [],
             'page' => 1,
             'limit' => 20,

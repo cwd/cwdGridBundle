@@ -1,43 +1,52 @@
 {% set data = grid.data() %}
-<table id="{{ grid.id }}" class="table grid table-striped table-bordered table-condensed">
-    <thead>
-        <tr>
-            {%- for column in grid if column.options.visible -%}
-                {% spaceless %}
-                {% set class = [column.options.attr.class|default('')] %}
-                {% if column.options.sortable %}{% set class = class|merge(['sortable']) %}{% endif %}
-                {% if column.isSorted() %}{% set class = class|merge(['sorted '~column.getSortDir()]) %}{% endif %}
-                <th class="{{- class|join(' ') -}}"
-                    style="{%- for key,value in column.getHeaderStyleOptions() -%}{{ key }}:{{ value }};{%- endfor -%}"
-                    data-field="{{ column.name }}"
-                {%- for key,value in column.options.attr if key != 'class' -%}{{ key }}="{{ value }}" {% endfor %}>{{ column.options.label|trans }}</th>
-                {% endspaceless %}
-            {%- endfor -%}
-        </tr>
-        <tr>
-            {% for column in grid if column.options.visible %}
-                {% if column.options.searchable %}
-                    {% set value = "" %}
-                    <th>{{ column.renderFilter(grid.twig)|raw }}</th>
-                {% else %}
-                    <th></th>
-                {% endif %}
-            {% endfor %}
-        </tr>
-    </thead>
-    <tbody>
-    {% for row in data.data %}
-        <tr>
-            {% for column in grid if column.options.visible %}
-                <td class="{% if column.options.ellipsis %}ellipsis{% endif %}" style="text-align:{{ column.options.cellAlign }}">{{ attribute(row, column.name)|raw }}</td>
-            {% endfor %}
-        </tr>
-    {% endfor %}
-    </tbody>
-    <tfoot class="pagerfanta">
-    <td colspan="{{ grid.all|length }}">
-        <div class="col-md-10">{{ pagerfanta(data.pager, grid.options.pagerfantaOptions) }}</div>
-        <div class="col-md-2">
+<div class="cwd-grid-container">
+    <table id="{{ grid.id }}" class="table cwd-grid table-striped table-bordered table-condensed">
+        <thead>
+            <tr>
+                {%- for column in grid if column.options.visible -%}
+                    {% spaceless %}
+                    {% set class = [column.options.attr.class|default('')] %}
+                    {% if column.options.sortable %}{% set class = class|merge(['sortable']) %}{% endif %}
+                    {% if column.isSorted() %}{% set class = class|merge(['sorted '~column.getSortDir()]) %}{% endif %}
+                    <th class="{{- class|join(' ') -}}"
+                        style="{%- for key,value in column.getHeaderStyleOptions() -%}{{ key }}:{{ value }};{%- endfor -%}"
+                        data-field="{{ column.name }}"
+                    {%- for key,value in column.options.attr if key != 'class' -%}{{ key }}="{{ value }}" {% endfor %}>
+                        <div class="{% if column.options.ellipsis %}cwd-grid--ellipsis{% endif %}">
+                            {{ column.options.label|trans }}
+                        </div>
+                    </th>
+
+                    {% endspaceless %}
+                {%- endfor -%}
+            </tr>
+            <tr>
+                {% for column in grid if column.options.visible %}
+                    {% if column.options.searchable %}
+                        {% set value = "" %}
+                        <th>{{ column.renderFilter(grid.twig)|raw }}</th>
+                    {% else %}
+                        <th></th>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in data.data %}
+            <tr>
+                {% for column in grid if column.options.visible %}
+                    <td title="{#insert value title here#}" class="{% if column.options.ellipsis %}cwd-grid--ellipsis{% endif %}" style="{%- for key,value in column.getColumnStyleOptions() -%}{{ key }}:{{ value }};{%- endfor -%}">{{ attribute(row, column.name)|raw }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-10">{{ pagerfanta(data.pager, grid.options.pagerfantaOptions) }}</div>
+        <div class="col-sm-2">
             <select class="form-control listLengthSelector" style="margin-top: 20px;margin-bottom:20px">
                 {% for length in grid.options.listLength %}
                     <option {% if length == grid.options.limit %}selected{% endif %}>{{ length }}</option>
@@ -45,13 +54,13 @@
             </select>
 
         </div>
-    </td>
-    </tfoot>
-</table>
+    </div>
+</div>
+
 
 <script type="text/javascript">
     $(document).ready(function(){
-        var $grid = $('table.grid');
+        var $grid = $('table.cwd-grid');
         var $headers = $grid.find('th');
         var $params = new URLSearchParams(window.location.search);
 

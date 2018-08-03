@@ -1,7 +1,7 @@
 <div class="pull-{{ align }}">
     <div class="btn-group btn-group-solid btn-block hidden-xs">
         {% for action in actions %}
-            <a href="{{ path(action.route, action.route_params|default({})|merge({ id: value })) }}" class="btn {{ action.class|default('btn-primary') }} btn-xs tooltips" data-placement="top" data-container="body" data-original-title="{{ action.title|default('Action')|trans }}"><i class="fa {{ action.icon|default('fa-edit') }}"></i><span class="hidden-xs"> {{ action.title|trans }} </span></a>
+            <a href="{{ path(action.route, action.route_params|default({})|merge({ id: value })) }}" class="btn {{ action.class|default('btn-primary') }} btn-xs tooltips" data-placement="top" data-container="body" data-original-title="{{ action.title|default('Action')|trans }}"><i class="fa {{ action.icon|default('fa-edit') }}"></i>{#<span class="hidden-xs"> {{ action.title|trans }}#}</span></a>
         {% endfor %}
     </div>
     <div class="btn-group visible-xs">

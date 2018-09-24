@@ -197,17 +197,48 @@ abstract class AbstractColumn implements ColumnInterface
     public function getHeaderStyleOptions()
     {
         $options = [
-            'align',
-            'width',
-            'minWidth',
-            'maxWidth',
+            'align' => 'text-align',
+            'width' => 'width',
+            'minWidth' => 'min-width',
+            'maxWidth' => 'max-width',
         ];
 
         $optionMap = [];
-        foreach ($options as $key) {
+        foreach ($options as $key => $cssName) {
             $value = $this->getOption($key);
-            $key = ('align' != $key) ?: 'text-align';
-            if (!empty($value)) {
+            if (null !== $cssName) {
+                $key = $cssName;
+            }
+
+            if (!empty($value) && 'auto' !== $value) {
+                $optionMap[$key] = $value;
+            }
+        }
+
+        if (!isset($optionMap['width']) && isset($optionMap['max-width'])) {
+            $optionMap['width'] = $optionMap['max-width'];
+        }
+
+        return $optionMap;
+    }
+
+    public function getColumnStyleOptions()
+    {
+        $options = [
+            'cellAlign' => 'text-align',
+            'width' => 'width',
+            'minWidth' => 'min-width',
+            'maxWidth' => 'max-width',
+        ];
+
+        $optionMap = [];
+        foreach ($options as $key => $cssName) {
+            $value = $this->getOption($key);
+            if (null !== $cssName) {
+                $key = $cssName;
+            }
+
+            if (!empty($value) || 'auto' !== $value) {
                 $optionMap[$key] = $value;
             }
         }

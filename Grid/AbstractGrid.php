@@ -78,10 +78,9 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
     public function __construct(TranslatorInterface $translator, array $options = array())
     {
         $resolver = new OptionsResolver();
-        $this->configureOptions($resolver);
-
-        $this->options = $resolver->resolve($options);
         $this->translator = $translator;
+        $this->configureOptions($resolver);
+        $this->options = $resolver->resolve($options);
         $this->accessor = PropertyAccess::createPropertyAccessor();
     }
 

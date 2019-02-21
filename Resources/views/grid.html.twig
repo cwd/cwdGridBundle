@@ -13,7 +13,7 @@
                         data-field="{{ column.name }}"
                     {%- for key,value in column.options.attr if key != 'class' -%}{{ key }}="{{ value }}" {% endfor %}>
                         <div class="{% if column.options.ellipsis %}cwd-grid--ellipsis{% endif %}">
-                            {{ column.options.label|trans }}
+                            {{ column.options.label|trans|raw }}
                         </div>
                     </th>
 

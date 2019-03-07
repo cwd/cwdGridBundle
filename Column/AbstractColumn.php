@@ -82,6 +82,18 @@ abstract class AbstractColumn implements ColumnInterface
         return $this->field;
     }
 
+    /**
+     * @return string
+     */
+    public function getSqlField(): ?string
+    {
+        if (null === $this->getOption('sqlField')) {
+            return $this->getField();
+        }
+
+        return $this->getOption('sqlField');
+    }
+
     public function setIsSorted(bool $state): ColumnInterface
     {
         $this->isSorted = $state;
@@ -189,6 +201,7 @@ abstract class AbstractColumn implements ColumnInterface
             'attr' => [],
             'template' => null,
             'operator' => 'like',
+            'sqlField' => null,
         ));
 
         $resolver->setAllowedTypes('attr', 'array');

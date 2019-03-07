@@ -38,6 +38,11 @@ interface ColumnInterface
     /**
      * @return string
      */
+    public function getSqlField(): ?string;
+
+    /**
+     * @return string
+     */
     public function getName(): ?string;
 
     /**

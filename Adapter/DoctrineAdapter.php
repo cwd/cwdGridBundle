@@ -34,7 +34,7 @@ class DoctrineAdapter implements AdapterInterface
             if ($grid->has($field)) {
                 $column = $grid->get($field);
                 $grid->setSortField($column, $grid->getOption('sortDir'));
-                $queryBuilder->orderBy($column->getField(), $grid->getOption('sortDir'));
+                $queryBuilder->orderBy($column->getSqlField(), $grid->getOption('sortDir'));
             }
         }
 
@@ -88,7 +88,7 @@ class DoctrineAdapter implements AdapterInterface
 
             switch ($filterSearch->operator) {
                 case 'eq':
-                    $where->add($queryBuilder->expr()->eq($column->getField(), $property));
+                    $where->add($queryBuilder->expr()->eq($column->getSqlField(), $property));
                     $queryBuilder->setParameter($property, $filterSearch->value);
                     break;
                 case 'like':
@@ -98,15 +98,15 @@ class DoctrineAdapter implements AdapterInterface
                         $value = 'true' == $value ? 1 : 0;
                     }
 
-                    $where->add($queryBuilder->expr()->like($column->getField(), $property));
+                    $where->add($queryBuilder->expr()->like($column->getSqlField(), $property));
                     $queryBuilder->setParameter($property, sprintf('%%%s%%', $value));
                     break;
                 case 'gteq':
-                    $where->add($queryBuilder->expr()->gte($column->getField(), $property));
+                    $where->add($queryBuilder->expr()->gte($column->getSqlField(), $property));
                     $queryBuilder->setParameter($property, $filterSearch->value);
                     break;
                 case 'lteq':
-                    $where->add($queryBuilder->expr()->lte($column->getField(), $property));
+                    $where->add($queryBuilder->expr()->lte($column->getSqlField(), $property));
                     $queryBuilder->setParameter($property, $filterSearch->value);
                     break;
             }

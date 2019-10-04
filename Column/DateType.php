@@ -58,7 +58,7 @@ class DateType extends AbstractColumn
             return null;
         }
 
-        if (!$value instanceof \DateTime) {
+        if (!$value instanceof \DateTimeInterface) {
             throw new UnexpectedTypeException($value, "\DateTime");
         }
 

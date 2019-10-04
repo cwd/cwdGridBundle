@@ -4,6 +4,9 @@ services:
             - [setDoctrineRegistry, ['@?doctrine']]
         tags: ['cwd_grid.adapter']
 
+    Cwd\GridBundle\Adapter\ArrayAdapter:
+        tags: ['cwd_grid.adapter']
+
     Cwd\GridBundle\GridFactory:
         public: true
         arguments:

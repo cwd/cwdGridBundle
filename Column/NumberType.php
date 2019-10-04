@@ -27,6 +27,7 @@ class NumberType extends AbstractColumn
         $resolver->setDefaults(array(
             'align' => 'right',
             'cellAlign' => 'right',
+            'operator' => 'eq',
         ));
     }
 }

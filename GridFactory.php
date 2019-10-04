@@ -51,14 +51,13 @@ class GridFactory
      *
      * @return GridInterface
      */
-    public function create($type = 'Cwd\GridBundle\Grid\AbstractGrid', array $options = array())
+    public function create($type = 'Cwd\GridBundle\Grid\AbstractGrid', array $options = array(), string $adapter = DoctrineAdapter::class)
     {
         if (!is_string($type)) {
             throw new UnexpectedTypeException($type, 'string');
         }
 
-        // @ToDo Make the Adapter Configurable
-        $adapter = $this->getAdapter(DoctrineAdapter::class);
+        $adapter = $this->getAdapter($adapter);
         $type = $this->getType($type, $adapter, $options);
 
         $builder = new GridBuilder($adapter, new EventDispatcher(), $options);

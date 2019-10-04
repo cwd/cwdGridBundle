@@ -1,1 +1,1 @@
-<input class="form-control filter" data-field="{{ column.name }}" data-operator="like" type="text" name="filters[]" value="{{ value|escape }}" />
+<input class="form-control filter" data-field="{{ column.name }}" data-operator="{{ column.option('operator') }}" type="text" name="filters[]" value="{{ value|escape }}" />

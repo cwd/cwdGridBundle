@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Cwd\GridBundle\Tests;
 
-use App\Entity\Company;
-use App\Entity\Sample;
+use Devopsial\Entity\Company;
+use Devopsial\Entity\Sample;
 use Cwd\GridBundle\Column\SwitchType;
 use Cwd\GridBundle\Column\ActionType;
 use Cwd\GridBundle\Column\CheckboxType;

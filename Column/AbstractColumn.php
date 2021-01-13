@@ -16,6 +16,7 @@ namespace Cwd\GridBundle\Column;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\Translation\TranslatorInterface;
+use Twig\Environment;
 
 /**
  * Class AbstractColumn.
@@ -122,15 +123,20 @@ abstract class AbstractColumn implements ColumnInterface
      * @param mixed             $value
      * @param mixed             $object
      * @param mixed             $primary
-     * @param \Twig_Environment $twig
+     * @param Environment $twig
      *
      * @return mixed
      */
-    public function render($value, $object, $primary, \Twig_Environment $twig)
+    public function render($value, $object, $primary, Environment $twig)
     {
         /* dont use twig if no template is provided */
         if (null === $this->getOption('template')) {
             return $value;
+        }
+
+        /** Special case for count(*) */
+        if (is_array($object)) {
+            $object = $object[0];
         }
 
         return $this->renderTemplate(
@@ -145,15 +151,11 @@ abstract class AbstractColumn implements ColumnInterface
     }
 
     /**
-     * @param \Twig_Environment $twig
+     * @param Environment $twig
      *
      * @return string
-     *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
      */
-    public function renderFilter(\Twig_Environment $twig)
+    public function renderFilter(Environment $twig)
     {
         $value = (null !== $this->getFilter() && '' != isset($this->getFilter()->value)) ? $this->getFilter()->value : '';
 
@@ -164,13 +166,13 @@ abstract class AbstractColumn implements ColumnInterface
     }
 
     /**
-     * @param \Twig_Environment $twig
+     * @param Environment $twig
      * @param string            $template
      * @param array             $options
      *
      * @return string
      */
-    protected function renderTemplate(\Twig_Environment $twig, $template, $options)
+    protected function renderTemplate(Environment $twig, $template, $options)
     {
         $options = array_merge($options, $this->getOptions());
 

@@ -18,10 +18,12 @@ use Cwd\GridBundle\Column\AbstractColumn;
 use Cwd\GridBundle\Column\ColumnInterface;
 use Cwd\GridBundle\GridBuilderInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
 
 /**
  * Class AbstractGrid.
@@ -85,23 +87,23 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
     }
 
     /**
-     * @param \Twig_Environment $twig
+     * @param Environment $twig
      */
-    public function setTwig(\Twig_Environment $twig)
+    public function setTwig(Environment $twig)
     {
         $this->twig = $twig;
     }
 
     /**
-     * @return \Twig_Environment
+     * @return Environment
      */
-    public function getTwig(): \Twig_Environment
+    public function getTwig(): Environment
     {
         return $this->twig;
     }
 
     /**
-     * @param ObjectManager $objectManager
+     * @param EntityManagerInterface $objectManager
      *
      * @return $this
      */
@@ -192,18 +194,11 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
                 $value = $column->getValue($row, $column->getField(), $this->findPrimary(), $this->accessor);
                 $value = $column->render($value, $row, $this->getPrimaryValue($row), $this->twig);
 
-                // FancyGrid doesnt like null
-                if (null === $value) {
-                    $value = '';
-                }
-
                 if ($column->getOption('translatable', false)) {
                     $value = $this->translator->trans($value, [], $column->getOption('translation_domain'));
                 }
 
-                // FancyGrid does not like . in index name
-                $name = str_replace('.', '_', $column->getName());
-
+                $name = $column->getName();
                 $rowData[$name] = $value;
             }
 
@@ -286,7 +281,7 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
         return $columns;
     }
 
-    public function getQueryBuilder(ObjectManager $objectManager, array $params = []): QueryBuilder
+    public function getQueryBuilder(EntityManagerInterface $objectManager, array $params = []): QueryBuilder
     {
         throw new \InvalidArgumentException('This method is only allowed when using DoctrineAdapter');
     }

@@ -13,11 +13,13 @@ declare(strict_types=1);
 
 namespace Cwd\GridBundle\Adapter;
 
+use Cwd\GridBundle\Column\ColumnInterface;
 use Cwd\GridBundle\Exception\AdapterException;
 use Cwd\GridBundle\Grid\GridInterface;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
 class DoctrineAdapter implements AdapterInterface
@@ -27,6 +29,7 @@ class DoctrineAdapter implements AdapterInterface
 
     public function getData(GridInterface $grid): Pagerfanta
     {
+        /** @var QueryBuilder $queryBuilder */
         $queryBuilder = $grid->getQueryBuilder($this->getDoctrineRegistry()->getManager(), $grid->all());
 
         if (null !== $grid->getOption('sortField')) {
@@ -51,8 +54,8 @@ class DoctrineAdapter implements AdapterInterface
      * @return Pagerfanta
      */
     public function getPager(QueryBuilder $queryBuilder, GridInterface $grid)
-    {
-        $adapter = new DoctrineORMAdapter($queryBuilder, false);
+    {                                              // Not sure about this - was false
+        $adapter = new QueryAdapter($queryBuilder, true);
         $pager = new Pagerfanta($adapter);
 
         $page = $grid->getOption('page', 1);
@@ -115,7 +118,7 @@ class DoctrineAdapter implements AdapterInterface
         }
 
         if (count($where->getParts()) > 0) {
-            $queryBuilder->having($where);
+            $queryBuilder->andHaving($where);
         }
     }
 

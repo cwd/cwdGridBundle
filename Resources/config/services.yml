@@ -21,7 +21,3 @@ services:
         public: false
         tags:
             - { name: twig.extension }
-
-    #test.twig.extension.pagerfanta:
-    #    alias: twig.extension.pagerfanta
-    #    public: true

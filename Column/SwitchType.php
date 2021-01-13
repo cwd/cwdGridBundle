@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Cwd\GridBundle\Column;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Twig\Environment;
 
 class SwitchType extends CheckboxType
 {
@@ -37,15 +38,7 @@ class SwitchType extends CheckboxType
         $resolver->setRequired('route');
     }
 
-    /**
-     * @param mixed             $value
-     * @param mixed             $object
-     * @param mixed             $primary
-     * @param \Twig_Environment $twig
-     *
-     * @return mixed
-     */
-    public function render($value, $object, $primary, \Twig_Environment $twig)
+    public function render($value, $object, $primary, Environment $twig)
     {
         return $this->renderTemplate(
             $twig,

@@ -1,12 +1,11 @@
 {% set data = grid.data() %}
-<div class="cwd-grid-container">
-    <table id="{{ grid.id }}" class="table cwd-grid table-striped table-bordered table-condensed">
+<div class="cwd-grid-container table-responsive p-0">
+    <table id="{{ grid.id }}" class="cwd-grid table table-hover table-condensed">
         <thead>
             <tr>
                 {%- for column in grid %}
-		    {%- if column.options.visible -%}
+		            {%- if column.options.visible -%}
                     {% apply spaceless %}
-
                         {% set class = [column.options.attr.class|default('')] %}
                         {% if column.options.sortable %}{% set class = class|merge(['sortable']) %}{% endif %}
                         {% if column.isSorted() %}{% set class = class|merge(['sorted '~column.getSortDir()]) %}{% endif %}
@@ -16,7 +15,7 @@
                             {%- for key,value in column.options.attr -%}{%- if key != 'class' -%}{{ key }}="{{ value }}" {% endif %}{% endfor %}
                         >
                             <div class="{% if column.options.ellipsis %}cwd-grid--ellipsis{% endif %}">
-                                {{ column.options.label|trans|raw }}
+                                {% if column.options.label is not empty %}{{ column.options.label|trans|raw }}{% endif %}
                             </div>
                         </th>
                     {% endapply %}
@@ -59,7 +58,7 @@
                     {{ pagerfanta(data.pager, grid.options.pagerfantaOptions) }}
                 </td>
                 <td align="right">
-                    <select class="form-control listLengthSelector" style="margin-top: 20px;margin-bottom:20px">
+                    <select class="form-control listLengthSelector">
                         {% for length in grid.options.listLength %}
                             <option {% if length == grid.options.limit %}selected{% endif %}>{{ length }}</option>
                         {% endfor %}

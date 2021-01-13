@@ -22,8 +22,11 @@ declare(strict_types=1);
 namespace Cwd\GridBundle\Twig;
 
 use Cwd\GridBundle\Grid\GridInterface;
+use Twig\Environment;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-class GridExtension extends \Twig_Extension
+class GridExtension extends AbstractExtension
 {
     protected $jsOptions = [];
 
@@ -37,19 +40,19 @@ class GridExtension extends \Twig_Extension
     }
 
     /**
-     * @return \Twig_SimpleFunction[]
+     * @return TwigFunction[]
      */
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('grid', [$this, 'grid'], [
+            new TwigFunction('grid', [$this, 'grid'], [
                 'needs_environment' => true,
                 'is_safe' => ['html'],
             ]),
         );
     }
 
-    public function grid(\Twig_Environment $twig, GridInterface $grid, array $options = [])
+    public function grid(Environment $twig, GridInterface $grid, array $options = [])
     {
         $options = array_merge($options, $this->jsOptions);
 

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Cwd\GridBundle\Column;
 
 use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Twig\Environment;
 
 interface ColumnInterface
 {
@@ -49,11 +50,11 @@ interface ColumnInterface
      * @param mixed             $value
      * @param mixed             $object
      * @param mixed             $primary
-     * @param \Twig_Environment $twig
+     * @param Environment $twig
      *
      * @return mixed
      */
-    public function render($value, $object, $primary, \Twig_Environment $twig);
+    public function render($value, $object, $primary, Environment $twig);
 
     /**
      * @param mixed            $object

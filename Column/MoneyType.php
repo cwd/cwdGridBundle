@@ -15,6 +15,7 @@ namespace Cwd\GridBundle\Column;
 
 use Cwd\GridBundle\Exception\UnexpectedTypeException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Twig\Environment;
 
 /**
  * Class NumberType.
@@ -47,15 +48,7 @@ class MoneyType extends AbstractColumn
         ));
     }
 
-    /**
-     * @param mixed             $value
-     * @param mixed             $object
-     * @param mixed             $primary
-     * @param \Twig_Environment $twig
-     *
-     * @return string
-     */
-    public function render($value, $object, $primary, \Twig_Environment $twig)
+    public function render($value, $object, $primary, Environment $twig)
     {
         if (null === $value) {
             return null;

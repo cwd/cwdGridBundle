@@ -15,6 +15,7 @@ namespace Cwd\GridBundle\Column;
 
 use Cwd\GridBundle\Exception\UnexpectedTypeException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Twig\Environment;
 
 /**
  * Class NumberType.
@@ -44,15 +45,7 @@ class DateType extends AbstractColumn
         ));
     }
 
-    /**
-     * @param mixed             $value
-     * @param mixed             $object
-     * @param mixed             $primary
-     * @param \Twig_Environment $twig
-     *
-     * @return string
-     */
-    public function render($value, $object, $primary, \Twig_Environment $twig)
+    public function render($value, $object, $primary, Environment $twig)
     {
         if (null === $value) {
             return null;
@@ -62,19 +55,22 @@ class DateType extends AbstractColumn
             throw new UnexpectedTypeException($value, "\DateTime");
         }
 
+        if ($this->getOption('template') !== null) {
+            return $this->renderTemplate(
+                $twig,
+                $this->getOption('template'),
+                [
+                    'value' => $value,
+                    'object' => $object,
+                    'primary' => $primary,
+                ]
+            );
+        }
+
         return $value->format($this->getOption('format')['read']);
     }
 
-    /**
-     * @param \Twig_Environment $twig
-     *
-     * @return string
-     *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
-     */
-    public function renderFilter(\Twig_Environment $twig)
+    public function renderFilter(Environment $twig)
     {
         $filters = $this->getFilter();
         $value = [

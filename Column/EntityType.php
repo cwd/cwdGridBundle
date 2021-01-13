@@ -23,6 +23,7 @@ use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\Form\ChoiceList\Factory\DefaultChoiceListFactory;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Twig\Environment;
 
 class EntityType extends ChoiceType
 {
@@ -142,16 +143,7 @@ class EntityType extends ChoiceType
         return $printOptions;
     }
 
-    /**
-     * @param \Twig_Environment $twig
-     *
-     * @return string
-     *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
-     */
-    public function renderFilter(\Twig_Environment $twig)
+    public function renderFilter(Environment $twig)
     {
         $value = (null !== $this->getFilter() && '' != isset($this->getFilter()->value)) ? $this->getFilter()->value : '';
 

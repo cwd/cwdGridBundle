@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Cwd\GridBundle\Column;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Twig\Environment;
 
 class ChoiceType extends AbstractColumn
 {
@@ -34,16 +35,7 @@ class ChoiceType extends AbstractColumn
         $resolver->setAllowedTypes('data', 'array');
     }
 
-    /**
-     * @param \Twig_Environment $twig
-     *
-     * @return string
-     *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
-     */
-    public function renderFilter(\Twig_Environment $twig)
+    public function renderFilter(Environment $twig)
     {
         $value = (null !== $this->getFilter() && '' != isset($this->getFilter()->value)) ? $this->getFilter()->value : '';
 

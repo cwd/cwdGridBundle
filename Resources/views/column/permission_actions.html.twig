@@ -2,7 +2,9 @@
     <div class="d-none d-sm-block">
         <div class="btn-group">
             {% for action in actions %}
+                {% if (is_granted(action.permission, object)) %}
                 <a href="{{ path(action.route, action.route_params|default({})|merge({ id: value })) }}" class="btn btn-flat {{ action.class|default('btn-primary') }} btn-xs tooltips" data-placement="top" data-container="body" data-original-title="{{ action.title|default('Action')|trans }}"><i class="fa {{ action.icon|default('fa-edit') }}"></i></a>
+                {% endif %}
             {% endfor %}
         </div>
     </div>
@@ -13,7 +15,9 @@
             </a>
             <div class="dropdown-menu">
                 {% for action in actions %}
+                    {% if (is_granted(action.permission, object)) %}
                     <a href="{{ path(action.route, action.route_params|default({})|merge({ id: value })) }}" class="dropdown-item tooltips" data-placement="top" data-container="body" data-original-title="{{ action.title|default('Action')|trans }}"><i class="fa {{ action.icon|default('fa-edit') }}"></i> {{ action.title|trans }}</a>
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>

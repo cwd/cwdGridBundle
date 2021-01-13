@@ -16,6 +16,7 @@ namespace Cwd\GridBundle\Grid;
 use Cwd\GridBundle\Adapter\AdapterInterface;
 use Cwd\GridBundle\Column\ColumnInterface;
 use Cwd\GridBundle\GridBuilderInterface;
+use Twig\Environment;
 
 interface GridInterface
 {
@@ -33,9 +34,9 @@ interface GridInterface
      */
     public function setAdapter(AdapterInterface $adapter);
 
-    public function setTwig(\Twig_Environment $twig);
+    public function setTwig(Environment $twig);
 
-    public function getTwig(): \Twig_Environment;
+    public function getTwig(): Environment;
 
     /**
      * @param string $name

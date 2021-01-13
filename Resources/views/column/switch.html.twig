@@ -1,4 +1,4 @@
-{% spaceless %}
+{% apply spaceless %}
 <input
         type="checkbox"
         id="switch_{{ primary }}"
@@ -15,4 +15,4 @@
         value="1"
         {% if value %}checked="checked"{% endif %}
         >
-{% endspaceless %}
+{% endapply %}

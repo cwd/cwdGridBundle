@@ -18,7 +18,8 @@ use Cwd\GridBundle\Adapter\DoctrineAdapter;
 use Cwd\GridBundle\Exception\UnexpectedTypeException;
 use Cwd\GridBundle\Grid\GridInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
 
 class GridFactory
 {
@@ -33,14 +34,14 @@ class GridFactory
     protected $translator;
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     protected $twig;
 
     /**
-     * @param \Twig_environment $twig
+     * @param Environment $twig
      */
-    public function __construct(\Twig_Environment $twig)
+    public function __construct(Environment $twig)
     {
         $this->twig = $twig;
     }
@@ -141,19 +142,19 @@ class GridFactory
     }
 
     /**
-     * @return \Twig_Environment
+     * @return Environment
      */
-    public function getTwig(): \Twig_Environment
+    public function getTwig(): Environment
     {
         return $this->twig;
     }
 
     /**
-     * @param \Twig_Environment $twig
+     * @param Environment $twig
      *
      * @return GridFactory
      */
-    public function setTwig(\Twig_Environment $twig): GridFactory
+    public function setTwig(Environment $twig): GridFactory
     {
         $this->twig = $twig;
 

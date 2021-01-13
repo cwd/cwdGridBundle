@@ -12,11 +12,13 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php" : "^7.2",
-        "symfony/framework-bundle": "~2.8|~3.0|^4.0|^5.0",
-        "symfony/options-resolver": "~2.8|~3.0|^4.0|^5.0",
-        "symfony/twig-bundle": "~2.7|~3.0|^4.0|^5.0",
-        "babdev/pagerfanta-bundle": "~2.1"
+        "php" : "^7.4",
+        "symfony/framework-bundle": "^4.0|^5.0",
+        "symfony/options-resolver": "^4.0|^5.0",
+        "symfony/twig-bundle": "^4.0|^5.0",
+        "twig/twig": "^v3.1.0",	
+        "pagerfanta/pagerfanta": "^2.4",
+        "babdev/pagerfanta-bundle": "^2.7.0"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "@stable",
@@ -25,6 +27,7 @@
     },
     "suggest": {
         "doctrine/orm": "For using DoctrineAdapter",
+        "pagerfanta/doctrine-orm-adapter": "For using DoctrineAdapter",
         "symfony/translation": "For using Translations",
         "symfony/form": "Needed for using EntityType",
         "symfony/workflow": "Needed for using WorkflowActionType"

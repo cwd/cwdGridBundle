@@ -129,6 +129,15 @@ abstract class AbstractColumn implements ColumnInterface
      */
     public function render($value, $object, $primary, Environment $twig)
     {
+        if (is_callable($this->getOption('render'))) {
+            $callable = $this->getOption('render');
+            $value = $callable($value, $object, $primary);
+        }
+
+        if ($this->getOption('translatable')) {
+            $value = $this->translate($value, $this->getOption('translatable_domain'));
+        }
+
         /* dont use twig if no template is provided */
         if (null === $this->getOption('template')) {
             return $value;
@@ -189,6 +198,7 @@ abstract class AbstractColumn implements ColumnInterface
         $resolver->setDefaults(array(
             'identifier' => false,
             'label' => null,
+            'render' => null,
             'align' => 'left',
             'cellAlign' => 'left',
             'visible' => true,

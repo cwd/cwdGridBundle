@@ -4,7 +4,7 @@
     {% apply spaceless %}
     <option {% if (column.dataToView(element.value) == value) %}selected{% endif %} value="{{ column.dataToView(element.value) }}">
         {% if element.label is defined %}
-            {{ element.label }}
+            {{ element.label|trans }}
         {% else %}
             {{ element.value }}
         {% endif %}

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Cwd\GridBundle\Column;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Twig\Environment;
 
 /**
  * Class CheckboxType.
@@ -32,14 +33,14 @@ class CheckboxType extends ChoiceType
         $resolver->setDefaults(array(
             'align' => 'right',
             'cellAlign' => 'right',
-            'data' => [['value' => true, 'label' => $this->translate('Yes')], ['value' => false, 'label' => $this->translate('No')]],
+            'data' => [['value' => true, 'label' => 'generic.yes'], ['value' => false, 'label' => 'generic.no']],
         ));
     }
 
-    public function render($value, $object, $primary, \Twig_Environment $twig)
+    public function render($value, $object, $primary, Environment $twig)
     {
         if (null === $this->getOption('template')) {
-            return ($value || !empty($value)) ? '<i class="far fa-check-circle"></i>' : '<i class="far fa-circle"></i>';
+            return ($value || !empty($value)) ? '<i class="fad fa-check-circle text-success"></i>' : '<i class="fad fa-circle text-danger"></i>';
         }
 
         return parent::render($value, $object, $primary, $twig);

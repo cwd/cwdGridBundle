@@ -318,6 +318,11 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
             return $this->children[$name];
         }
 
+        $name = str_replace('.', '_', $name);
+        if (isset($this->children[$name])) {
+            return $this->children[$name];
+        }
+
         throw new \InvalidArgumentException(sprintf('The child with the name "%s" does not exist.', $name));
     }
 

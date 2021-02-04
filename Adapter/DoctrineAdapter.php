@@ -118,7 +118,7 @@ class DoctrineAdapter implements AdapterInterface
         }
 
         if (count($where->getParts()) > 0) {
-            $queryBuilder->andHaving($where);
+            $queryBuilder->andWhere($where);
         }
     }
 

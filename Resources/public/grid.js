@@ -73,7 +73,7 @@ $(document).ready(function(){
                 getFilters();
                 $params.set('page', 1);
                 document.location.href = '?' + $params.toString();
-            }, 500);
+            }, 2500);
         };
         $grid.find(".filter").on('change', function () {
             filterPage();

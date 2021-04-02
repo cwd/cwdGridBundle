@@ -90,6 +90,10 @@ class DoctrineAdapter implements AdapterInterface
             $filterSearch->value = $column->viewToData($filterSearch->value);
 
             switch ($filterSearch->operator) {
+                case 'in':
+                    $where->add($queryBuilder->expr()->in($column->getSqlField(), $property));
+                    $queryBuilder->setParameter($property, $filterSearch->value);
+                    break;
                 case 'eq':
                     $where->add($queryBuilder->expr()->eq($column->getSqlField(), $property));
                     $queryBuilder->setParameter($property, $filterSearch->value);
@@ -120,6 +124,8 @@ class DoctrineAdapter implements AdapterInterface
         if (count($where->getParts()) > 0) {
             $queryBuilder->andWhere($where);
         }
+
+        dump($queryBuilder->getQuery()->getSQL());
     }
 
     /**

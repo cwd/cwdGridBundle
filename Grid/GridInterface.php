@@ -63,6 +63,8 @@ interface GridInterface
      * @return \Cwd\GridBundle\Column\ColumnInterface[]
      */
     public function all(): array;
+    
+    public function getData(): array;
 
     public function hasOption(string $name);
 

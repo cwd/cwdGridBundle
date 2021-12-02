@@ -64,7 +64,7 @@ interface ColumnInterface
      *
      * @return mixed
      */
-    public function getValue($object, $field, $primary, $accessor);
+    public function getValue($object, $field, $primary, $accessor, $parentField = null);
 
     public function setIsSorted(bool $state): ColumnInterface;
 

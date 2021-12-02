@@ -191,7 +191,13 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
 
             foreach ($this->all() as $column) {
                 /** @var ColumnInterface $column */
-                $value = $column->getValue($row, $column->getField(), $this->findPrimary(), $this->accessor);
+                $value = $column->getValue(
+                    $row,
+                    $column->getField(),
+                    $this->findPrimary(),
+                    $this->accessor,
+                    $column->getOption('parentField')
+                );
                 $value = $column->render($value, $row, $this->getPrimaryValue($row), $this->twig);
 
                 if ($column->getOption('translatable', false)) {

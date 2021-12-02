@@ -214,6 +214,7 @@ abstract class AbstractColumn implements ColumnInterface
             'template' => null,
             'operator' => 'like',
             'sqlField' => null,
+            'parentField' => null,
         ));
 
         $resolver->setAllowedTypes('attr', 'array');
@@ -317,13 +318,17 @@ abstract class AbstractColumn implements ColumnInterface
      *
      * @return mixed
      */
-    public function getValue($object, $field, $primary, $accessor)
+    public function getValue($object, $field, $primary, $accessor, $parentField = null)
     {
         /* Special case handling for e.g. count() */
         if (is_array($object) && isset($object[$field])) {
             return $object[$field];
         } elseif (is_array($object)) {
             $object = $object[0];
+        }
+
+        if(null !== $parentField) {
+            $field = $parentField . '.' . $field;
         }
 
         if (!$accessor->isReadable($object, $field)) {

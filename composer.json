@@ -17,8 +17,8 @@
         "symfony/options-resolver": ">4.4",
         "symfony/twig-bundle": ">4.4",
         "twig/twig": "^v3.1.0",	
-        "pagerfanta/pagerfanta": "^2.4",
-        "babdev/pagerfanta-bundle": "^2.7.0"
+        "pagerfanta/pagerfanta": ">2.4",
+        "babdev/pagerfanta-bundle": ">2.7.0"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "@stable",

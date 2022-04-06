@@ -1,12 +1,10 @@
 <?php
-
 /*
- * This file is part of the Cwd Grid Bundle
+ * This file is part of the cwd/grid-bundle
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * ©2022 cwd.at GmbH <office@cwd.at>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * see LICENSE file for details
  */
 
 declare(strict_types=1);
@@ -26,33 +24,15 @@ class GridFactory
     /**
      * @var AdapterInterface[]
      */
-    protected $adapters = [];
+    protected array $adapters = [];
 
-    /**
-     * @var TranslatorInterface|null
-     */
-    protected $translator;
+    protected ?TranslatorInterface $translator;
 
-    /**
-     * @var Environment
-     */
-    protected $twig;
-
-    /**
-     * @param Environment $twig
-     */
-    public function __construct(Environment $twig)
+    public function __construct(protected Environment $twig)
     {
-        $this->twig = $twig;
     }
 
-    /**
-     * @param string $type
-     * @param array  $options
-     *
-     * @return GridInterface
-     */
-    public function create($type = 'Cwd\GridBundle\Grid\AbstractGrid', array $options = array(), string $adapter = DoctrineAdapter::class)
+    public function create(string $type = 'Cwd\GridBundle\Grid\AbstractGrid', array $options = [], string $adapter = DoctrineAdapter::class): GridInterface
     {
         if (!is_string($type)) {
             throw new UnexpectedTypeException($type, 'string');
@@ -73,15 +53,10 @@ class GridFactory
         return $type;
     }
 
-    /**
-     * @param string $name
-     * @param array  $options
-     *
-     * @return GridInterface
-     */
-    public function getType(string $name, AdapterInterface $adapter, array $options = [])
+    public function getType(string $name, AdapterInterface $adapter, array $options = []): GridInterface
     {
-        if (class_exists($name) && in_array('Cwd\GridBundle\Grid\GridInterface', class_implements($name))) {
+        if (class_exists($name) && in_array('Cwd\GridBundle\Grid\GridInterface', class_implements($name))) { // @phpstan-ignore-line
+            /** @var GridInterface $type */
             $type = new $name($this->translator, $options);
             $type->setAdapter($adapter);
             $type->setTwig($this->twig);
@@ -92,9 +67,6 @@ class GridFactory
         return $type;
     }
 
-    /**
-     * @return AdapterInterface
-     */
     public function getAdapter(string $adapter): AdapterInterface
     {
         if ($this->hasAdapter($adapter)) {
@@ -104,11 +76,6 @@ class GridFactory
         throw new \InvalidArgumentException(sprintf('Adapter %s is not known. Did you tag it with "cwd_grid.adapter"', $adapter));
     }
 
-    /**
-     * @param AdapterInterface $adapter
-     *
-     * @return GridFactory
-     */
     public function addAdapter(AdapterInterface $adapter): GridFactory
     {
         $this->adapters[get_class($adapter)] = $adapter;
@@ -121,19 +88,11 @@ class GridFactory
         return isset($this->adapters[$adapter]);
     }
 
-    /**
-     * @return null|TranslatorInterface
-     */
     public function getTranslator(): ?TranslatorInterface
     {
         return $this->translator;
     }
 
-    /**
-     * @param null|TranslatorInterface $translator
-     *
-     * @return GridFactory
-     */
     public function setTranslator(?TranslatorInterface $translator): GridFactory
     {
         $this->translator = $translator;
@@ -141,19 +100,11 @@ class GridFactory
         return $this;
     }
 
-    /**
-     * @return Environment
-     */
     public function getTwig(): Environment
     {
         return $this->twig;
     }
 
-    /**
-     * @param Environment $twig
-     *
-     * @return GridFactory
-     */
     public function setTwig(Environment $twig): GridFactory
     {
         $this->twig = $twig;

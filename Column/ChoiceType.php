@@ -1,12 +1,10 @@
 <?php
-
 /*
- * This file is part of the Cwd Grid Bundle
+ * This file is part of the cwd/grid-bundle
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * ©2022 cwd.at GmbH <office@cwd.at>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * see LICENSE file for details
  */
 
 declare(strict_types=1);
@@ -21,21 +19,21 @@ class ChoiceType extends AbstractColumn
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'align' => 'left',
             'cellAlign' => 'left',
             'operator' => 'eq',
             'data' => [],
-        ));
+        ]);
 
         $resolver->setAllowedTypes('data', 'array');
     }
 
-    public function renderFilter(Environment $twig)
+    public function renderFilter(Environment $twig): string
     {
         $value = (null !== $this->getFilter() && '' != isset($this->getFilter()->value)) ? $this->getFilter()->value : '';
 

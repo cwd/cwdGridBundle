@@ -1,12 +1,10 @@
 <?php
-
 /*
- * This file is part of the Cwd Grid Bundle
+ * This file is part of the cwd/grid-bundle
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * ©2022 cwd.at GmbH <office@cwd.at>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * see LICENSE file for details
  */
 
 declare(strict_types=1);
@@ -20,11 +18,11 @@ class ActionType extends AbstractColumn
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'align' => 'right',
             'searchable' => false,
             'sortable' => false,
@@ -36,7 +34,7 @@ class ActionType extends AbstractColumn
             'attr' => [
                 'class' => 'grid-action',
             ],
-        ));
+        ]);
 
         $resolver->setAllowedTypes('actions', 'array');
         $resolver->setAllowedTypes('actions_params', 'array');

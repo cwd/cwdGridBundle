@@ -1,19 +1,16 @@
 <?php
-
 /*
- * This file is part of the Cwd Grid Bundle
+ * This file is part of the cwd/grid-bundle
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * ©2022 cwd.at GmbH <office@cwd.at>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * see LICENSE file for details
  */
 
 declare(strict_types=1);
 
 namespace Cwd\GridBundle\Column;
 
-use Cwd\GridBundle\Exception\UnexpectedTypeException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Twig\Environment;
 
@@ -24,16 +21,16 @@ use Twig\Environment;
  */
 class MoneyType extends AbstractColumn
 {
-    protected $filter = [];
+    protected ?array $filter = [];
 
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'align' => 'right',
             'cellAlign' => 'right',
             'currency' => '€',
@@ -45,13 +42,13 @@ class MoneyType extends AbstractColumn
             ],
             'width' => 150,
             'operator' => 'eq',
-        ));
+        ]);
     }
 
-    public function render($value, $object, $primary, Environment $twig)
+    public function render(mixed $value, mixed $object, string|int $primary, Environment $twig): string
     {
         if (null === $value) {
-            return null;
+            return "";
         }
 
         return sprintf(

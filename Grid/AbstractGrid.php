@@ -1,12 +1,10 @@
 <?php
-
 /*
- * This file is part of the Cwd Grid Bundle
+ * This file is part of the cwd/grid-bundle
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * ©2022 cwd.at GmbH <office@cwd.at>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * see LICENSE file for details
  */
 
 declare(strict_types=1);
@@ -17,11 +15,11 @@ use Cwd\GridBundle\Adapter\AdapterInterface;
 use Cwd\GridBundle\Column\AbstractColumn;
 use Cwd\GridBundle\Column\ColumnInterface;
 use Cwd\GridBundle\GridBuilderInterface;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
@@ -32,52 +30,16 @@ use Twig\Environment;
  */
 abstract class AbstractGrid implements GridInterface, \IteratorAggregate
 {
-    /**
-     * @var array
-     */
-    protected $options;
+    protected array $options = [];
+    protected array $children = [];
+    protected ObjectManager $objectManager;
+    protected TranslatorInterface $translator;
+    protected PropertyAccessorInterface $accessor;
+    protected ?string $primary = null;
+    protected Environment $twig;
+    protected AdapterInterface $adapter;
 
-    /**
-     * @var array
-     */
-    protected $children = [];
-
-    /**
-     * @var ObjectManager
-     */
-    protected $objectManager;
-
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-
-    /**
-     * @var \Symfony\Component\PropertyAccess\PropertyAccessor
-     */
-    protected $accessor;
-
-    /**
-     * @var null|string
-     */
-    protected $primary = null;
-
-    /**
-     * @var \Twig_Environment
-     */
-    protected $twig;
-
-    /**
-     * @var AdapterInterface
-     */
-    protected $adapter;
-
-    /**
-     * AbstractGrid constructor.
-     *
-     * @param array $options
-     */
-    public function __construct(TranslatorInterface $translator, array $options = array())
+    public function __construct(TranslatorInterface $translator, array $options = [])
     {
         $resolver = new OptionsResolver();
         $this->translator = $translator;
@@ -86,45 +48,29 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
         $this->accessor = PropertyAccess::createPropertyAccessor();
     }
 
-    /**
-     * @param Environment $twig
-     */
-    public function setTwig(Environment $twig)
+    public function setTwig(Environment $twig): void
     {
         $this->twig = $twig;
     }
 
-    /**
-     * @return Environment
-     */
     public function getTwig(): Environment
     {
         return $this->twig;
     }
 
-    /**
-     * @param EntityManagerInterface $objectManager
-     *
-     * @return $this
-     */
-    public function setObjectManager($objectManager)
+    public function setObjectManager(ObjectManager $objectManager): self
     {
         $this->objectManager = $objectManager;
 
         return $this;
     }
 
-    public function getObjectManager()
+    public function getObjectManager(): ObjectManager
     {
         return $this->objectManager;
     }
 
-    /**
-     * generate gridid.
-     *
-     * @return string
-     */
-    public function getId()
+    public function getId(): string
     {
         $data = [
             get_class($this),
@@ -135,7 +81,7 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
         return md5(serialize($data));
     }
 
-    public function setSortField(ColumnInterface $field, $sortDir = 'ASC'): GridInterface
+    public function setSortField(ColumnInterface $field, string $sortDir = 'ASC'): GridInterface
     {
         foreach ($this->all() as $column) {
             $column->setIsSorted(false);
@@ -148,9 +94,6 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getOptions(): array
     {
         return $this->options;
@@ -159,13 +102,10 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function buildGrid(GridBuilderInterface $builder, array $options)
+    public function buildGrid(GridBuilderInterface $builder, array $options): void
     {
     }
 
-    /**
-     * @return array
-     */
     public function getData(): array
     {
         $pager = $this->getAdapter()->getData($this);
@@ -178,12 +118,7 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
         ];
     }
 
-    /**
-     * @param array|\Traversable $rows
-     *
-     * @return array
-     */
-    protected function parseData($rows)
+    protected function parseData(array|\Traversable $rows): array
     {
         $data = [];
         foreach ($rows as $row) {
@@ -214,14 +149,7 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
         return $data;
     }
 
-    /**
-     * Get value of primary column.
-     *
-     * @param mixed $object
-     *
-     * @return mixed
-     */
-    public function getPrimaryValue($object)
+    public function getPrimaryValue(mixed $object): mixed
     {
         if (null === $this->primary) {
             $this->primary = $this->findPrimary();
@@ -235,12 +163,7 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
         return $this->accessor->getValue($object, $this->primary);
     }
 
-    /**
-     * @return null|string
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function findPrimary()
+    public function findPrimary(): ?string
     {
         foreach ($this->all() as $column) {
             if (true === $column->getOption('identifier')) {
@@ -251,10 +174,7 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
         throw new \InvalidArgumentException('no column marked as identifier!');
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'template' => '@CwdGrid/grid.html.twig',
@@ -275,7 +195,7 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
         $resolver->setAllowedTypes('pagerfantaOptions', 'array');
     }
 
-    public function getColumnDefinition()
+    public function getColumnDefinition(): array
     {
         $columns = [];
         /** @var AbstractColumn $column */
@@ -287,37 +207,21 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
         return $columns;
     }
 
-    public function getQueryBuilder(EntityManagerInterface $objectManager, array $params = []): QueryBuilder
+    public function getQueryBuilder(ObjectManager $objectManager, array $params = []): QueryBuilder
     {
         throw new \InvalidArgumentException('This method is only allowed when using DoctrineAdapter');
     }
 
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function hasOption(string $name)
+    public function hasOption(string $name): bool
     {
         return array_key_exists($name, $this->options);
     }
 
-    /**
-     * @param string     $name
-     * @param mixed|null $default
-     *
-     * @return mixed
-     */
-    public function getOption(string $name, $default = null)
+    public function getOption(string $name, mixed $default = null): mixed
     {
         return array_key_exists($name, $this->options) ? $this->options[$name] : $default;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return ColumnInterface
-     */
     public function get(string $name): ColumnInterface
     {
         if (isset($this->children[$name])) {
@@ -332,11 +236,6 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
         throw new \InvalidArgumentException(sprintf('The child with the name "%s" does not exist.', $name));
     }
 
-    /**
-     * @param string $name
-     *
-     * @return $this
-     */
     public function remove(string $name): GridInterface
     {
         unset($this->children[$name]);
@@ -344,11 +243,6 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
         return $this;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
     public function has(string $name): bool
     {
         return isset($this->children[$name]);
@@ -364,38 +258,25 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
 
     /**
      * @param array<ColumnInterface> $children
-     *
-     * @return $this
      */
-    public function setChildren($children)
+    public function setChildren(array $children): self
     {
         $this->children = $children;
 
         return $this;
     }
 
-    /**
-     * @return \ArrayIterator
-     */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->all());
     }
 
-    /**
-     * @return AdapterInterface
-     */
     public function getAdapter(): AdapterInterface
     {
         return $this->adapter;
     }
 
-    /**
-     * @param AdapterInterface $adapter
-     *
-     * @return AbstractGrid
-     */
-    public function setAdapter(AdapterInterface $adapter)
+    public function setAdapter(AdapterInterface $adapter): self
     {
         $this->adapter = $adapter;
 

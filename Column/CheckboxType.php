@@ -1,12 +1,10 @@
 <?php
-
 /*
- * This file is part of the Cwd Grid Bundle
+ * This file is part of the cwd/grid-bundle
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * ©2022 cwd.at GmbH <office@cwd.at>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * see LICENSE file for details
  */
 
 declare(strict_types=1);
@@ -26,18 +24,18 @@ class CheckboxType extends ChoiceType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'align' => 'right',
             'cellAlign' => 'right',
             'data' => [['value' => true, 'label' => 'generic.yes'], ['value' => false, 'label' => 'generic.no']],
-        ));
+        ]);
     }
 
-    public function render($value, $object, $primary, Environment $twig)
+    public function render(mixed $value, mixed $object, string|int $primary, Environment $twig): string
     {
         if (null === $this->getOption('template')) {
             return ($value || !empty($value)) ? '<i class="fad fa-check-circle text-success"></i>' : '<i class="fad fa-circle text-danger"></i>';
@@ -46,12 +44,12 @@ class CheckboxType extends ChoiceType
         return parent::render($value, $object, $primary, $twig);
     }
 
-    public function viewToData($value)
+    public function viewToData(mixed $value): mixed
     {
         return ('1' === $value) ? true : false;
     }
 
-    public function dataToView($value)
+    public function dataToView(mixed $value): mixed
     {
         return ($value) ? '1' : '0';
     }

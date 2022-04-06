@@ -1,12 +1,10 @@
 <?php
-
 /*
- * This file is part of the Cwd Grid Bundle
+ * This file is part of the cwd/grid-bundle
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * ©2022 cwd.at GmbH <office@cwd.at>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * see LICENSE file for details
  */
 
 declare(strict_types=1);
@@ -15,51 +13,15 @@ namespace Cwd\GridBundle;
 
 use Cwd\GridBundle\Column\ColumnInterface;
 
-/**
- * Interface GridBuilderInterface.
- */
 interface GridBuilderInterface extends \Countable
 {
-    /**
-     * @param ColumnInterface $child
-     *
-     * @return $this
-     */
-    public function add(ColumnInterface $child);
+    public function add(ColumnInterface $child): self;
 
-    /**
-     * Returns a child by name.
-     *
-     * @param string $name The name of the child
-     *
-     * @return ColumnInterface
-     *
-     * @throws Cwd\GridBundle\Grid\Exception\InvalidArgumentException if the given child does not exist
-     */
     public function get(string $name): ColumnInterface;
 
-    /**
-     * Removes the field with the given name.
-     *
-     * @param string $name
-     *
-     * @return GridBuilderInterface The builder object
-     */
-    public function remove(string $name);
+    public function remove(string $name): self;
 
-    /**
-     * Returns whether a field with the given name exists.
-     *
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function has(string $name);
+    public function has(string $name): bool;
 
-    /**
-     * Returns the children.
-     *
-     * @return array
-     */
-    public function all();
+    public function all(): array;
 }

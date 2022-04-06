@@ -1,12 +1,10 @@
 <?php
-
 /*
- * This file is part of the Cwd Grid Bundle
+ * This file is part of the cwd/grid-bundle
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * ©2022 cwd.at GmbH <office@cwd.at>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * see LICENSE file for details
  */
 
 declare(strict_types=1);
@@ -15,17 +13,16 @@ namespace Cwd\GridBundle\Adapter;
 
 use Cwd\GridBundle\Column\ColumnInterface;
 use Cwd\GridBundle\Exception\AdapterException;
+use Cwd\GridBundle\Grid\GridDoctrineInterface;
 use Cwd\GridBundle\Grid\GridInterface;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\QueryBuilder;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
 class DoctrineAdapter implements AdapterInterface
 {
-    /** @var Registry|null */
-    private $doctrine;
+    private ?Registry $doctrine;
 
     public function getData(GridInterface $grid): Pagerfanta
     {
@@ -48,12 +45,7 @@ class DoctrineAdapter implements AdapterInterface
         return $this->getPager($queryBuilder, $grid);
     }
 
-    /**
-     * @param QueryBuilder $queryBuilder
-     *
-     * @return Pagerfanta
-     */
-    public function getPager(QueryBuilder $queryBuilder, GridInterface $grid)
+    public function getPager(QueryBuilder $queryBuilder, GridInterface $grid): Pagerfanta
     {                                              // Not sure about this - was false
         $adapter = new QueryAdapter($queryBuilder, true);
         $pager = new Pagerfanta($adapter);
@@ -69,10 +61,6 @@ class DoctrineAdapter implements AdapterInterface
         return $pager;
     }
 
-    /**
-     * @param QueryBuilder      $queryBuilder
-     * @param ColumnInterface[] $columns
-     */
     protected function addSearch(QueryBuilder $queryBuilder, GridInterface $grid): void
     {
         $filter = $grid->getOption('filter');
@@ -128,9 +116,6 @@ class DoctrineAdapter implements AdapterInterface
         }
     }
 
-    /**
-     * @return Registry|null
-     */
     public function getDoctrineRegistry(): ?Registry
     {
         if (null === $this->doctrine) {
@@ -140,11 +125,6 @@ class DoctrineAdapter implements AdapterInterface
         return $this->doctrine;
     }
 
-    /**
-     * @param Registry|null $doctrine
-     *
-     * @return DoctrineAdapter
-     */
     public function setDoctrineRegistry(?Registry $doctrine): DoctrineAdapter
     {
         $this->doctrine = $doctrine;

@@ -1,12 +1,10 @@
 <?php
-
 /*
- * This file is part of the Cwd Grid Bundle
+ * This file is part of the cwd/grid-bundle
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * ©2022 cwd.at GmbH <office@cwd.at>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * see LICENSE file for details
  */
 
 declare(strict_types=1);
@@ -15,7 +13,8 @@ namespace Cwd\GridBundle\Column;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 /**
@@ -25,39 +24,15 @@ use Twig\Environment;
  */
 abstract class AbstractColumn implements ColumnInterface
 {
-    /**
-     * @var string
-     */
-    protected $name;
+    protected string $name;
+    protected string $field;
+    protected array $options = [];
+    protected TranslatorInterface $translator;
+    protected bool $isSorted = false;
+    protected ?string $sortDir = null;
+    protected ?array $filter = null;
 
-    /**
-     * @var string
-     */
-    protected $field;
-    /**
-     * @var array
-     */
-    protected $options = [];
-
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-
-    protected $isSorted = false;
-
-    protected $sortDir = null;
-
-    protected $filter = null;
-
-    /**
-     * AbstractColumn constructor.
-     *
-     * @param string $name
-     * @param string $field
-     * @param array  $options
-     */
-    public function __construct($name, $field, array $options = [])
+    public function __construct(string $name, string $field, array $options = [])
     {
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);
@@ -67,25 +42,16 @@ abstract class AbstractColumn implements ColumnInterface
         $this->field = $field;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
     public function getField(): ?string
     {
         return $this->field;
     }
 
-    /**
-     * @return string
-     */
     public function getSqlField(): ?string
     {
         if (null === $this->getOption('sqlField')) {
@@ -119,15 +85,7 @@ abstract class AbstractColumn implements ColumnInterface
         return $this->sortDir;
     }
 
-    /**
-     * @param mixed             $value
-     * @param mixed             $object
-     * @param mixed             $primary
-     * @param Environment $twig
-     *
-     * @return mixed
-     */
-    public function render($value, $object, $primary, Environment $twig)
+    public function render(mixed $value, mixed $object, string|int $primary, Environment $twig): string
     {
         if (is_callable($this->getOption('render'))) {
             $callable = $this->getOption('render');
@@ -143,7 +101,7 @@ abstract class AbstractColumn implements ColumnInterface
             return $value;
         }
 
-        /** Special case for count(*) */
+        /* Special case for count(*) */
         if (is_array($object)) {
             $object = $object[0];
         }
@@ -159,12 +117,7 @@ abstract class AbstractColumn implements ColumnInterface
         );
     }
 
-    /**
-     * @param Environment $twig
-     *
-     * @return string
-     */
-    public function renderFilter(Environment $twig)
+    public function renderFilter(Environment $twig): string
     {
         $value = (null !== $this->getFilter() && '' != isset($this->getFilter()->value)) ? $this->getFilter()->value : '';
 
@@ -174,14 +127,7 @@ abstract class AbstractColumn implements ColumnInterface
         ]);
     }
 
-    /**
-     * @param Environment $twig
-     * @param string            $template
-     * @param array             $options
-     *
-     * @return string
-     */
-    protected function renderTemplate(Environment $twig, $template, $options)
+    protected function renderTemplate(Environment $twig, string $template, array $options = []): string
     {
         $options = array_merge($options, $this->getOptions());
 
@@ -190,12 +136,10 @@ abstract class AbstractColumn implements ColumnInterface
 
     /**
      * set defaults options.
-     *
-     * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'identifier' => false,
             'label' => null,
             'render' => null,
@@ -215,12 +159,12 @@ abstract class AbstractColumn implements ColumnInterface
             'operator' => 'like',
             'sqlField' => null,
             'parentField' => null,
-        ));
+        ]);
 
         $resolver->setAllowedTypes('attr', 'array');
     }
 
-    public function getHeaderStyleOptions()
+    public function getHeaderStyleOptions(): array
     {
         $options = [
             'align' => 'text-align',
@@ -248,7 +192,7 @@ abstract class AbstractColumn implements ColumnInterface
         return $optionMap;
     }
 
-    public function getColumnStyleOptions()
+    public function getColumnStyleOptions(): array
     {
         $options = [
             'cellAlign' => 'text-align',
@@ -272,9 +216,6 @@ abstract class AbstractColumn implements ColumnInterface
         return $optionMap;
     }
 
-    /**
-     * @return array
-     */
     public function buildColumnOptions(): array
     {
         $printOptions = [
@@ -310,15 +251,7 @@ abstract class AbstractColumn implements ColumnInterface
         return $printOptions;
     }
 
-    /**
-     * @param mixed            $object
-     * @param string           $field
-     * @param string           $primary
-     * @param PropertyAccessor $accessor
-     *
-     * @return mixed
-     */
-    public function getValue($object, $field, $primary, $accessor, $parentField = null)
+    public function getValue(mixed $object, string $field, string $primary, PropertyAccessorInterface $accessor, mixed $parentField = null): mixed
     {
         /* Special case handling for e.g. count() */
         if (is_array($object) && isset($object[$field])) {
@@ -327,8 +260,8 @@ abstract class AbstractColumn implements ColumnInterface
             $object = $object[0];
         }
 
-        if(null !== $parentField) {
-            $field = $parentField . '.' . $field;
+        if (null !== $parentField) {
+            $field = $parentField.'.'.$field;
         }
 
         if (!$accessor->isReadable($object, $field)) {
@@ -345,76 +278,56 @@ abstract class AbstractColumn implements ColumnInterface
         return $accessor->getValue($object, $field);
     }
 
-    public function viewToData($value)
+    public function viewToData(mixed $value): mixed
     {
         return $value;
     }
 
-    public function dataToView($value)
+    public function dataToView(mixed $value): mixed
     {
         return $value;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function hasOption($name): bool
+    public function hasOption(string $name): bool
     {
         return array_key_exists($name, $this->options);
     }
 
-    /**
-     * @param string      $name
-     * @param string|null $default
-     *
-     * @return mixed
-     */
-    public function getOption(string $name, $default = null)
+    public function getOption(string $name, mixed $default = null): mixed
     {
         return array_key_exists($name, $this->options) ? $this->options[$name] : $default;
     }
 
-    /**
-     * @return array
-     */
     public function getOptions(): array
     {
         return $this->options;
     }
 
-    public function translate($key, $domain = null)
+    public function translate(string $key, ?string $domain = null): string
     {
         if (null === $this->getTranslator()) {
             return $key;
         }
 
-        return $this->getTranslator()->trans($key, $domain);
+        return $this->getTranslator()->trans($key, [], $domain);
     }
 
-    /**
-     * @return TranslatorInterface
-     */
     public function getTranslator(): ?TranslatorInterface
     {
         return $this->translator;
     }
 
-    /**
-     * @param TranslatorInterface $translator
-     */
-    public function setTranslator(TranslatorInterface $translator)
+    public function setTranslator(TranslatorInterface $translator): void
     {
         $this->translator = $translator;
     }
 
-    public function getFilter()
+    public function getFilter(): array
     {
         return $this->filter;
     }
 
-    public function setFilter($filter): ColumnInterface
+    public function setFilter(array $filter): ColumnInterface
     {
         $this->filter = $filter;
 

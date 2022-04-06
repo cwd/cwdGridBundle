@@ -1,12 +1,10 @@
 <?php
-
 /*
- * This file is part of the Cwd Grid Bundle
+ * This file is part of the cwd/grid-bundle
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * ©2022 cwd.at GmbH <office@cwd.at>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * see LICENSE file for details
  */
 
 declare(strict_types=1);
@@ -14,65 +12,22 @@ declare(strict_types=1);
 namespace Cwd\GridBundle\Column;
 
 use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Twig\Environment;
 
 interface ColumnInterface
 {
-    /**
-     * @return string
-     */
     public function buildColumnOptions(): array;
-
-    /**
-     * @param string $name
-     * @param mixed  $default
-     *
-     * @return mixed
-     */
-    public function getOption(string $name, $default = null);
-
-    /**
-     * @return string
-     */
+    public function getOption(string $name, mixed $default = null): mixed;
     public function getField(): ?string;
-
-    /**
-     * @return string
-     */
     public function getSqlField(): ?string;
-
-    /**
-     * @return string
-     */
     public function getName(): ?string;
-
-    /**
-     * @param mixed             $value
-     * @param mixed             $object
-     * @param mixed             $primary
-     * @param Environment $twig
-     *
-     * @return mixed
-     */
-    public function render($value, $object, $primary, Environment $twig);
-
-    /**
-     * @param mixed            $object
-     * @param string           $field
-     * @param string           $primary
-     * @param PropertyAccessor $accessor
-     *
-     * @return mixed
-     */
-    public function getValue($object, $field, $primary, $accessor, $parentField = null);
-
+    public function render(mixed $value, mixed $object, string|int $primary, Environment $twig): string;
+    public function getValue(mixed $object, string $field, string $primary, PropertyAccessorInterface $accessor, mixed $parentField = null): mixed;
     public function setIsSorted(bool $state): ColumnInterface;
-
     public function setSortDir(?string $dir = null): ColumnInterface;
-
     public function isSorted(): bool;
-
     public function getSortDir(): ?string;
-
-    public function setFilter($filter): ColumnInterface;
+    public function setFilter(array $filter): ColumnInterface;
+    public function viewToData(mixed $value): mixed;
 }

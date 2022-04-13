@@ -8,6 +8,10 @@
         {
             "name": "Ludwig Ruderstaller",
             "email": "l.ruderstaller@cwd.at"
+        },
+        {
+            "name": "Niklas de Vries",
+            "email": "n.devries@cwd.at"
         }
     ],
     "minimum-stability": "stable",

@@ -22,6 +22,14 @@ class Configuration implements ConfigurationInterface
         $treeBuilder->getRootNode()
             ->children()
                 ->scalarNode('template')->defaultValue('@CwdGrid/grid.html.twig')->cannotBeEmpty()->end()
+                ->arrayNode('pagerfantaOptions')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('translation_domain')->defaultValue('tabler')->cannotBeEmpty()->end()
+                        ->scalarNode('prev_message')->defaultValue('Prev')->cannotBeEmpty()->end()
+                        ->scalarNode('next_message')->defaultValue('Next')->cannotBeEmpty()->end()
+                    ->end()
+                ->end()
             ->end()
         ;
 

@@ -28,7 +28,7 @@ class GridFactory
 
     protected ?TranslatorInterface $translator;
 
-    public function __construct(protected Environment $twig, private string $gridTemplate)
+    public function __construct(protected Environment $twig, protected array $options = [])
     {
     }
 
@@ -39,7 +39,20 @@ class GridFactory
         }
 
         if (!isset($options['template'])) {
-            $options['template'] = $this->gridTemplate;
+            $options['template'] = $this->options['template'];
+        }
+
+        if ($this->translator !== null) {
+            $options['pagerfantaOptions']['prev_message'] = $this->translator->trans(
+                $this->options['pagerfantaOptions']['prev_message'],
+                [],
+                $this->options['pagerfantaOptions']['translation_domain']
+            );
+            $options['pagerfantaOptions']['next_message'] = $this->translator->trans(
+                $this->options['pagerfantaOptions']['next_message'],
+                [],
+                $this->options['pagerfantaOptions']['translation_domain']
+            );
         }
 
         $adapter = $this->getAdapter($adapter);

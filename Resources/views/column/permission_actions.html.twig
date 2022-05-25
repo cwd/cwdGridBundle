@@ -1,25 +1,26 @@
 <div class="float-{{ align }}">
-    <div class="d-none d-sm-block">
+    <div class="d-none d-md-block">
         <div class="btn-group">
             {% for action in actions %}
                 {% if (is_granted(action.permission, object)) %}
-                <a href="{{ path(action.route, action.route_params|default({})|merge({ id: value })) }}" class="btn btn-flat {{ action.class|default('btn-primary') }} btn-xs tooltips" data-placement="top" data-container="body" data-original-title="{{ action.title|default('Action')|trans }}"><i class="fa {{ action.icon|default('fa-edit') }}"></i></a>
+                <a href="{{ path(action.route, action.route_params|default({})|merge({ id: value })) }}" class="btn btn-flat {{ action.class|default('btn-primary') }} btn-sm tooltips" data-bs-placement="top" data-bs-toggle="tooltip"  title="{{ action.title|default('Action')|trans() }}"><i class="far {{ action.icon|default('fa-edit') }}"></i></a>
                 {% endif %}
             {% endfor %}
         </div>
     </div>
-    <div class="d-block d-sm-none">
-        <div class="btn-group">
-            <a class="btn btn-info dropdown-toggle dropdown-icon" data-toggle="dropdown" href="#">
-                {{ "generic.actions"|trans }}
+    <div class="d-block d-md-none">
+        <div class="dropdown">
+            <a class="btn btn-primary btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="far fa-toolbox"></i>
             </a>
-            <div class="dropdown-menu">
+
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 {% for action in actions %}
                     {% if (is_granted(action.permission, object)) %}
-                    <a href="{{ path(action.route, action.route_params|default({})|merge({ id: value })) }}" class="dropdown-item tooltips" data-placement="top" data-container="body" data-original-title="{{ action.title|default('Action')|trans }}"><i class="fa {{ action.icon|default('fa-edit') }}"></i> {{ action.title|trans }}</a>
+                        <li><a href="{{ path(action.route, action.route_params|default({})|merge({ id: value })) }}" class="dropdown-item {{ action.class|default('') }} btn-outline-dark">{{ action.title|trans }}</a></li>
                     {% endif %}
                 {% endfor %}
-            </div>
+            </ul>
         </div>
     </div>
 </div>

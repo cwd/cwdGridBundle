@@ -25,7 +25,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('pagerfantaOptions')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('translation_domain')->defaultValue('tabler')->cannotBeEmpty()->end()
+                        ->scalarNode('translation_domain')->defaultValue('grid')->cannotBeEmpty()->end()
                         ->scalarNode('prev_message')->defaultValue('Prev')->cannotBeEmpty()->end()
                         ->scalarNode('next_message')->defaultValue('Next')->cannotBeEmpty()->end()
                     ->end()

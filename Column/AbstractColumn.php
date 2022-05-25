@@ -98,7 +98,7 @@ abstract class AbstractColumn implements ColumnInterface
 
         /* dont use twig if no template is provided */
         if (null === $this->getOption('template')) {
-            return $value;
+            return $value ?: '' ;
         }
 
         /* Special case for count(*) */

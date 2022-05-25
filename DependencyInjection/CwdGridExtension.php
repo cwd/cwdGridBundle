@@ -23,7 +23,6 @@ class CwdGridExtension extends ConfigurableExtension
     {
         $configuration = new Configuration();
         $container->setParameter('cwd_grid.options', $configs);
-        dump($configs);
 
         $loader = new YamlFileLoader(
             $container,

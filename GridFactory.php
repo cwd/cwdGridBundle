@@ -28,7 +28,7 @@ class GridFactory
 
     protected ?TranslatorInterface $translator;
 
-    public function __construct(protected Environment $twig)
+    public function __construct(protected Environment $twig, private string $gridTemplate)
     {
     }
 
@@ -36,6 +36,10 @@ class GridFactory
     {
         if (!is_string($type)) {
             throw new UnexpectedTypeException($type, 'string');
+        }
+
+        if (!isset($options['template'])) {
+            $options['template'] = $this->gridTemplate;
         }
 
         $adapter = $this->getAdapter($adapter);

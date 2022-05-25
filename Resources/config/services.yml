@@ -11,6 +11,7 @@ services:
         public: true
         arguments:
             - '@twig'
+            - '%cwd_grid.template%'
         calls:
             - [setTranslator, ['@?translator']]
 

@@ -322,7 +322,7 @@ abstract class AbstractColumn implements ColumnInterface
         $this->translator = $translator;
     }
 
-    public function getFilter(): array
+    public function getFilter(): ?array
     {
         return $this->filter;
     }

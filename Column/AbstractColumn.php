@@ -27,7 +27,7 @@ abstract class AbstractColumn implements ColumnInterface
     protected string $name;
     protected string $field;
     protected array $options = [];
-    protected TranslatorInterface $translator;
+    protected ?TranslatorInterface $translator = null;
     protected bool $isSorted = false;
     protected ?string $sortDir = null;
     protected ?array $filter = null;

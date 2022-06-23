@@ -322,12 +322,12 @@ abstract class AbstractColumn implements ColumnInterface
         $this->translator = $translator;
     }
 
-    public function getFilter(): ?array
+    public function getFilter(): ?iterable
     {
         return $this->filter;
     }
 
-    public function setFilter(array $filter): ColumnInterface
+    public function setFilter(iterable $filter): ColumnInterface
     {
         $this->filter = $filter;
 

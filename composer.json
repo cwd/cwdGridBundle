@@ -21,8 +21,8 @@
         "symfony/options-resolver": ">5.4",
         "symfony/twig-bundle": ">5.4",
         "twig/twig": "^v3.1.0",	
-        "pagerfanta/pagerfanta": ">2.4",
-        "babdev/pagerfanta-bundle": ">2.7.0"
+        "pagerfanta/pagerfanta": ">3.6",
+        "babdev/pagerfanta-bundle": ">3.6"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "@stable",

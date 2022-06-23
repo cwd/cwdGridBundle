@@ -64,7 +64,7 @@ class GridFactory
         $type->setChildren($builder->children);
 
         foreach ($type->getOption('filter') as $filter) {
-            $type->get($filter->property)->setFilter($filter);
+            $type->get($filter->property)->setFilter((array) $filter);
         }
 
         return $type;

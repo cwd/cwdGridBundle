@@ -91,11 +91,4 @@ class DateType extends AbstractColumn
             'value' => $value,
         ]);
     }
-
-    public function setFilter(array $filter): ColumnInterface
-    {
-        $this->filter = $filter;
-
-        return $this;
-    }
 }

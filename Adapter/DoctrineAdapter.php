@@ -50,7 +50,7 @@ class DoctrineAdapter implements AdapterInterface
         $adapter = new QueryAdapter($queryBuilder, true);
         $pager = new Pagerfanta($adapter);
 
-        $page = $grid->getOption('page', 1);
+        $page = (int) $grid->getOption('page', 1);
         if ($page < 1) {
             $page = 1;
         }

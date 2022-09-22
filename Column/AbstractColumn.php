@@ -119,11 +119,21 @@ abstract class AbstractColumn implements ColumnInterface
 
     public function renderFilter(Environment $twig): string
     {
-        $value = (null !== $this->getFilter() && '' != isset($this->getFilter()->value)) ? $this->getFilter()->value : '';
+
+        if ($this->getFilter() !== null) {
+            $filter = $this->getFilter();
+            $value = isset($filter['value']) ? $filter['value'] : null;
+            if ($value !== null) {
+                return $twig->render('@CwdGrid/filter/text.html.twig', [
+                    'column' => $this,
+                    'value' => $value,
+                ]);
+            }
+        }
 
         return $twig->render('@CwdGrid/filter/text.html.twig', [
             'column' => $this,
-            'value' => $value,
+            'value' => '',
         ]);
     }
 

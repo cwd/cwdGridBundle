@@ -38,7 +38,7 @@ class CheckboxType extends ChoiceType
     public function render(mixed $value, mixed $object, string|int $primary, Environment $twig): string
     {
         if (null === $this->getOption('template')) {
-            return ($value || !empty($value)) ? '<i class="fad fa-check-circle text-success"></i>' : '<i class="fad fa-circle text-danger"></i>';
+            return ($value || !empty($value)) ? '<i class="far fa-check-circle text-success"></i>' : '<i class="far fa-circle text-danger"></i>';
         }
 
         return parent::render($value, $object, $primary, $twig);

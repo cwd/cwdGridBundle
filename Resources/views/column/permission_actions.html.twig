@@ -3,7 +3,16 @@
         <div class="btn-group">
             {% for action in actions %}
                 {% if (is_granted(action.permission, object)) %}
-                <a href="{{ path(action.route, action.route_params|default({})|merge({ id: value })) }}" class="btn btn-flat {{ action.class|default('btn-primary') }} btn-sm tooltips" data-bs-placement="top" data-bs-toggle="tooltip"  title="{{ action.title|default('Action')|trans() }}"><i class="far {{ action.icon|default('fa-edit') }}"></i></a>
+                <a
+                    href="{{ path(action.route, action.route_params|default({})|merge({ (action.id_field|default('id')): value })) }}"
+                    class="btn btn-flat {{ action.class|default('btn-primary') }} btn-xs tooltips"
+                    data-placement="top"
+                    data-container="body"
+                    data-original-title="{{ action.title|default('Action')|trans }}"
+                >
+                    <i class="fa {{ action.icon|default('fa-edit') }}"></i>
+                    {{ action.text|default('')|trans }}
+                </a>
                 {% endif %}
             {% endfor %}
         </div>
@@ -17,7 +26,7 @@
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 {% for action in actions %}
                     {% if (is_granted(action.permission, object)) %}
-                        <li><a href="{{ path(action.route, action.route_params|default({})|merge({ id: value })) }}" class="dropdown-item {{ action.class|default('') }} btn-outline-dark">{{ action.title|trans }}</a></li>
+                    <a href="{{ path(action.route, action.route_params|default({})|merge({ (action.id_field|default('id')): value })) }}" class="dropdown-item tooltips" data-placement="top" data-container="body" data-original-title="{{ action.title|default('Action')|trans }}"><i class="fa {{ action.icon|default('fa-edit') }}"></i> {{ action.title|trans }}</a>
                     {% endif %}
                 {% endfor %}
             </ul>

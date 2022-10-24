@@ -5,7 +5,7 @@
                 {% if (is_granted(action.permission, object)) %}
                 <a
                     href="{{ path(action.route, action.route_params|default({})|merge({ (action.id_field|default('id')): value })) }}"
-                    class="btn btn-flat {{ action.class|default('btn-primary') }} btn-sm tooltips"
+                    class="btn {{ action.class|default('btn-primary') }} btn-sm tooltips"
                     data-placement="top"
                     data-container="body"
                     data-original-title="{{ action.title|default('Action')|trans }}"

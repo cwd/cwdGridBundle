@@ -28,6 +28,6 @@ interface ColumnInterface
     public function setSortDir(?string $dir = null): ColumnInterface;
     public function isSorted(): bool;
     public function getSortDir(): ?string;
-    public function setFilter(iterable $filter): ColumnInterface;
+    public function addFilter(iterable $filter): ColumnInterface;
     public function viewToData(mixed $value): mixed;
 }

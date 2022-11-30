@@ -35,11 +35,9 @@ class ChoiceType extends AbstractColumn
 
     public function renderFilter(Environment $twig): string
     {
-        $value = (null !== $this->getFilter() && '' != isset($this->getFilter()->value)) ? $this->getFilter()->value : '';
-
         return $twig->render('@CwdGrid/filter/choice.html.twig', [
             'data' => $this->getOption('data'),
-            'value' => $value,
+            'value' => $this->getFirstFilterValue(),
             'column' => $this,
         ]);
     }

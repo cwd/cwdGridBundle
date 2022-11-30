@@ -117,23 +117,19 @@ abstract class AbstractColumn implements ColumnInterface
         );
     }
 
+    public function getFirstFilterValue(): string|array
+    {
+        $filter = $this->getFilter()[0] ?? null;
+        $value = (null !== $filter && '' != isset($filter['value'])) ? $filter['value'] : '';
+
+        return $value;
+    }
+
     public function renderFilter(Environment $twig): string
     {
-
-        if ($this->getFilter() !== null) {
-            $filter = $this->getFilter();
-            $value = isset($filter['value']) ? $filter['value'] : null;
-            if ($value !== null) {
-                return $twig->render('@CwdGrid/filter/text.html.twig', [
-                    'column' => $this,
-                    'value' => $value,
-                ]);
-            }
-        }
-
         return $twig->render('@CwdGrid/filter/text.html.twig', [
             'column' => $this,
-            'value' => '',
+            'value' => $this->getFirstFilterValue(),
         ]);
     }
 
@@ -337,9 +333,13 @@ abstract class AbstractColumn implements ColumnInterface
         return $this->filter;
     }
 
-    public function setFilter(iterable $filter): ColumnInterface
+    public function addFilter(iterable $filter): ColumnInterface
     {
-        $this->filter = $filter;
+        if (null === $this->filter) {
+            $this->filter = [];
+        }
+
+        $this->filter[] = $filter;
 
         return $this;
     }

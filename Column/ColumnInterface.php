@@ -22,7 +22,7 @@ interface ColumnInterface
     public function getField(): ?string;
     public function getSqlField(): ?string;
     public function getName(): ?string;
-    public function render(mixed $value, mixed $object, string|int $primary, Environment $twig): string;
+    public function render(mixed $value, mixed $object, string|int $primary, Environment $twig): string|int;
     public function getValue(mixed $object, string $field, string $primary, PropertyAccessorInterface $accessor, mixed $parentField = null): mixed;
     public function setIsSorted(bool $state): ColumnInterface;
     public function setSortDir(?string $dir = null): ColumnInterface;

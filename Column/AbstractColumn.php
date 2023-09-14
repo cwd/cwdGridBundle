@@ -85,7 +85,7 @@ abstract class AbstractColumn implements ColumnInterface
         return $this->sortDir;
     }
 
-    public function render(mixed $value, mixed $object, string|int $primary, Environment $twig): string|int
+    public function render(mixed $value, mixed $object, string|int $primary, Environment $twig): mixed
     {
         if (is_callable($this->getOption('render'))) {
             $callable = $this->getOption('render');

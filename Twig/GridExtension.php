@@ -1,12 +1,10 @@
 <?php
-
 /*
- * This file is part of the Cwd Grid Bundle
+ * This file is part of the cwd/grid-bundle
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * ©2022 cwd.at GmbH <office@cwd.at>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * see LICENSE file for details
  */
 
 declare(strict_types=1);
@@ -28,9 +26,9 @@ use Twig\TwigFunction;
 
 class GridExtension extends AbstractExtension
 {
-    protected $jsOptions = [];
+    protected array $jsOptions = [];
 
-    public function __construct($options = [])
+    public function __construct(array $options = [])
     {
         if (!isset($options['js_options'])) {
             $options['js_options'] = [];
@@ -42,17 +40,17 @@ class GridExtension extends AbstractExtension
     /**
      * @return TwigFunction[]
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
-        return array(
+        return [
             new TwigFunction('grid', [$this, 'grid'], [
                 'needs_environment' => true,
                 'is_safe' => ['html'],
             ]),
-        );
+        ];
     }
 
-    public function grid(Environment $twig, GridInterface $grid, array $options = [])
+    public function grid(Environment $twig, GridInterface $grid, array $options = []): string
     {
         $options = array_merge($options, $this->jsOptions);
 

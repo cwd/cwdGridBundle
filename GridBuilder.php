@@ -1,12 +1,10 @@
 <?php
-
 /*
- * This file is part of the Cwd Grid Bundle
+ * This file is part of the cwd/grid-bundle
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * ©2022 cwd.at GmbH <office@cwd.at>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * see LICENSE file for details
  */
 
 declare(strict_types=1);
@@ -19,57 +17,27 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class GridBuilder implements GridBuilderInterface, \IteratorAggregate
 {
-    /** @var EventDispatcherInterface */
-    protected $dispatcher;
-
-    /** @var array */
-    public $options;
-
     /**
      * @var ColumnInterface[]
      */
-    public $children = array();
+    public array $children = [];
 
-    /** @var AdapterInterface */
-    protected $adapter;
+    protected array $data = [];
 
-    /**
-     * @var array
-     */
-    protected $data;
-
-    /**
-     * @param AdapterInterface         $adapter
-     * @param EventDispatcherInterface $dispatcher The event dispatcher
-     * @param array                    $options    The form options
-     *
-     * @throws InvalidArgumentException if the data class is not a valid class or if
-     *                                  the name contains invalid characters
-     */
-    public function __construct(AdapterInterface $adapter, EventDispatcherInterface $dispatcher, array $options = array())
-    {
-        $this->dispatcher = $dispatcher;
-        $this->options = $options;
-        $this->adapter = $adapter;
+    public function __construct(
+        protected AdapterInterface $adapter,
+        protected EventDispatcherInterface $dispatcher,
+        public array $options = []
+    ) {
     }
 
-    /**
-     * @param ColumnInterface $child
-     *
-     * @return $this
-     */
-    public function add(ColumnInterface $child): GridBuilder
+    public function add(ColumnInterface $child): self
     {
         $this->children[$child->getName()] = $child;
 
         return $this;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return ColumnInterface
-     */
     public function get(string $name): ColumnInterface
     {
         if ($this->has($name)) {
@@ -79,113 +47,66 @@ class GridBuilder implements GridBuilderInterface, \IteratorAggregate
         throw new \InvalidArgumentException(sprintf('The child with the name "%s" does not exist.', $name));
     }
 
-    /**
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function remove(string $name)
+    public function remove(string $name): self
     {
         unset($this->children[$name]);
 
         return $this;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function has(string $name)
+    public function has(string $name): bool
     {
         return isset($this->children[$name]);
     }
 
-    /**
-     * @return ColumnInterface[]
-     */
-    public function all()
+    public function all(): array
     {
         return $this->children;
     }
 
-    /**
-     * @return GridBuilder
-     */
-    protected function getGridConfig(): GridBuilder
+    protected function getGridConfig(): self
     {
         $config = clone $this;
 
         return $config;
     }
 
-    /**
-     * @return int
-     */
     public function count(): int
     {
         return count($this->children);
     }
 
-    /**
-     * @return \ArrayIterator
-     */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->all());
     }
 
-    /**
-     * @return array
-     */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
 
-    /**
-     * @param array $options
-     */
-    public function setOptions(array $options)
+    public function setOptions(array $options): void
     {
         $this->options = $options;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function hasOption(string $name)
+    public function hasOption(string $name): bool
     {
         return array_key_exists($name, $this->options);
     }
 
-    /**
-     * @param string      $name
-     * @param string|null $default
-     *
-     * @return mixed
-     */
-    public function getOption(string $name, $default = null)
+    public function getOption(string $name, ?string $default = null): ?string
     {
         return array_key_exists($name, $this->options) ? $this->options[$name] : $default;
     }
 
-    /**
-     * @return AdapterInterface
-     */
     public function getAdapter(): AdapterInterface
     {
         return $this->adapter;
     }
 
-    /**
-     * @param AdapterInterface $adapter
-     *
-     * @return GridBuilder
-     */
-    public function setAdapter(AdapterInterface $adapter): GridBuilder
+    public function setAdapter(AdapterInterface $adapter): self
     {
         $this->adapter = $adapter;
 

@@ -1,40 +1,39 @@
 <?php
 /*
- * This file is part of the Cwd Grid Bundle
+ * This file is part of the cwdGridBundle
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * ©2022 cwd.at GmbH <office@cwd.at>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 declare(strict_types=1);
 
-$finder = PhpCsFixer\Finder::create()
+$finder = (new PhpCsFixer\Finder())
     ->notName('*.twig')
-    ->in([__DIR__.'/bundles/Cwd/GridBundle'])
-;
+    ->in([__DIR__]);
 
-$year = date('Y');
+$year = 2022;
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config())
     ->setUsingCache(true)
     ->setRiskyAllowed(true)
     ->setRules([
         '@Symfony' => true,
+        '@PHP81Migration' => true,
         'declare_strict_types' => true,
         'header_comment' => [
             'header' => <<<EOF
-This file is part of the Cwd Grid Bundle
+This file is part of the cwd/grid-bundle
 
-(c) {$year} cwd.at GmbH <office@cwd.at>
+©{$year} cwd.at GmbH <office@cwd.at>
 
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 EOF
             ,
             'location' => 'after_open',
+            'separate' => 'bottom',
         ],
     ])
-    ->setFinder($finder)
-;
+    ->setFinder($finder);

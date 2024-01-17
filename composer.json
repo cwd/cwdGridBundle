@@ -8,22 +8,29 @@
         {
             "name": "Ludwig Ruderstaller",
             "email": "l.ruderstaller@cwd.at"
+        },
+        {
+            "name": "Niklas de Vries",
+            "email": "n.devries@cwd.at"
         }
     ],
     "minimum-stability": "stable",
     "require": {
-        "php" : ">=7.4",
-        "symfony/framework-bundle": ">4.4",
-        "symfony/options-resolver": ">4.4",
-        "symfony/twig-bundle": ">4.4",
+        "php" : ">=8.0",
+        "symfony/framework-bundle": ">5.4",
+        "symfony/options-resolver": ">5.4",
+        "symfony/twig-bundle": ">5.4",
         "twig/twig": "^v3.1.0",	
-        "pagerfanta/pagerfanta": ">2.4",
-        "babdev/pagerfanta-bundle": ">2.7.0"
+        "pagerfanta/pagerfanta": ">3.6",
+        "babdev/pagerfanta-bundle": ">3.6"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "@stable",
         "symfony/orm-pack": "*",
-        "symfony/css-selector": "@stable"
+        "symfony/css-selector": "@stable",
+        "phpstan/phpstan": "^1.5",
+        "phpstan/phpstan-beberlei-assert": "^1.0",
+        "phpstan/phpstan-symfony": "^1.1"
     },
     "suggest": {
         "doctrine/orm": "For using DoctrineAdapter",
@@ -35,12 +42,12 @@
     "autoload": {
         "psr-4": { "Cwd\\GridBundle\\": "" },
         "exclude-from-classmap": [
-            "/Tests/"
+            "/bundles/Tests/"
         ]
     },
     "autoload-dev": {
         "psr-4": {
-            "Cwd\\GridBundle\\Tests\\": "/Tests/"
+            "Cwd\\GridBundle\\Tests\\": "/bundles/Tests/"
         }
     }
 

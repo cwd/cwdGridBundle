@@ -1,0 +1,25 @@
+.cwd-grid .cwd-grid--ellipsis {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.cwd-grid tr th.sorted {
+    position: relative;
+    padding-right: 25px;
+}
+.cwd-grid tr th.sorted>div {
+    width: 100%;
+    overflow: hidden;
+}
+.cwd-grid tr th.sorted i.fas {
+    position: absolute;
+    right: 5px;
+    top: 8px;
+}
+.cwd-grid-container {
+    width: 100%;
+    overflow: auto;
+}
+.listLengthSelector {
+    width: auto;
+}

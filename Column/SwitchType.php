@@ -1,12 +1,10 @@
 <?php
-
 /*
- * This file is part of the Cwd Grid Bundle
+ * This file is part of the cwd/grid-bundle
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * ©2022 cwd.at GmbH <office@cwd.at>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * see LICENSE file for details
  */
 
 declare(strict_types=1);
@@ -18,7 +16,7 @@ use Twig\Environment;
 
 class SwitchType extends CheckboxType
 {
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
@@ -38,7 +36,7 @@ class SwitchType extends CheckboxType
         $resolver->setRequired('route');
     }
 
-    public function render($value, $object, $primary, Environment $twig)
+    public function render(mixed $value, mixed $object, mixed $primary, Environment $twig): string
     {
         return $this->renderTemplate(
             $twig,

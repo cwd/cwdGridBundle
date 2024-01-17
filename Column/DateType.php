@@ -1,12 +1,10 @@
 <?php
-
 /*
- * This file is part of the Cwd Grid Bundle
+ * This file is part of the cwd/grid-bundle
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * ©2022 cwd.at GmbH <office@cwd.at>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * see LICENSE file for details
  */
 
 declare(strict_types=1);
@@ -24,16 +22,16 @@ use Twig\Environment;
  */
 class DateType extends AbstractColumn
 {
-    protected $filter = [];
+    protected ?array $filter = [];
 
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'align' => 'right',
             'cellAlign' => 'right',
             'format' => [
@@ -42,20 +40,20 @@ class DateType extends AbstractColumn
             ],
             'width' => 150,
             'type' => 'date',
-        ));
+        ]);
     }
 
-    public function render($value, $object, $primary, Environment $twig)
+    public function render(mixed $value, mixed $object, string|int $primary, Environment $twig): string
     {
         if (null === $value) {
-            return null;
+            return "";
         }
 
         if (!$value instanceof \DateTimeInterface) {
             throw new UnexpectedTypeException($value, "\DateTime");
         }
 
-        if ($this->getOption('template') !== null) {
+        if (null !== $this->getOption('template')) {
             return $this->renderTemplate(
                 $twig,
                 $this->getOption('template'),
@@ -70,7 +68,7 @@ class DateType extends AbstractColumn
         return $value->format($this->getOption('format')['read']);
     }
 
-    public function renderFilter(Environment $twig)
+    public function renderFilter(Environment $twig): string
     {
         $filters = $this->getFilter();
         $value = [
@@ -79,12 +77,12 @@ class DateType extends AbstractColumn
         ];
 
         foreach ($filters as $filter) {
-            if (isset($filter->operator) && 'gteq' == $filter->operator) {
-                $value['from'] = $filter->value;
+            if (isset($filter['operator']) && 'gteq' == $filter['operator']) {
+                $value['from'] = $filter['value']; // @phpstan-ignore-line
             }
 
-            if (isset($filter->operator) && 'lteq' == $filter->operator) {
-                $value['to'] = $filter->value;
+            if (isset($filter['operator']) && 'lteq' == $filter['operator']) {
+                $value['to'] = $filter['value']; // @phpstan-ignore-line
             }
         }
 
@@ -92,12 +90,5 @@ class DateType extends AbstractColumn
             'column' => $this,
             'value' => $value,
         ]);
-    }
-
-    public function setFilter($filter): ColumnInterface
-    {
-        $this->filter[] = $filter;
-
-        return $this;
     }
 }

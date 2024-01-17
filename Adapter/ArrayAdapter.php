@@ -1,45 +1,37 @@
 <?php
-
 /*
- * This file is part of the Cwd Grid Bundle
+ * This file is part of the cwd/grid-bundle
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * ©2022 cwd.at GmbH <office@cwd.at>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * see LICENSE file for details
  */
 
 declare(strict_types=1);
 
 namespace Cwd\GridBundle\Adapter;
 
-use Cwd\GridBundle\Exception\AdapterException;
 use Cwd\GridBundle\Grid\GridInterface;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Adapter\ArrayAdapter as PagerfantaArrayAdapter;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class ArrayAdapter implements AdapterInterface
 {
-    /** @var ArrayCollection */
-    private $data;
-    private $accessor;
+    private ArrayCollection $data;
+    private PropertyAccessor $accessor;
 
     public function __construct()
     {
         $this->accessor = new PropertyAccessor();
+        $this->data = new ArrayCollection();
     }
 
     public function getData(GridInterface $grid): Pagerfanta
     {
-        //$queryBuilder = $grid->getQueryBuilder($this->getDoctrineRegistry()->getManager(), $grid->all());
-
-
         if (null !== $grid->getOption('sortField')) {
             $field = $grid->getOption('sortField');
             if ($grid->has($field)) {
@@ -57,14 +49,15 @@ class ArrayAdapter implements AdapterInterface
         return $this->getPager($this->data, $grid);
     }
 
-    private function sortBy($field, $dir = 'ASC')
+    private function sortBy(string $field, string $dir = 'ASC'): void
     {
         $iterator = $this->data->getIterator();
         $accessor = $this->accessor;
+        /** @phpstan-ignore-next-line */
         $iterator->uasort(function ($a, $b) use ($accessor, $field, $dir) {
-            if ($dir === 'ASC') {
+            if ('ASC' === $dir) {
                 return ($accessor->getValue($a, $field) < $accessor->getValue($b, $field)) ? -1 : 1;
-            } elseif ($dir === 'DESC') {
+            } elseif ('DESC' === $dir) {
                 return ($accessor->getValue($a, $field) > $accessor->getValue($b, $field)) ? -1 : 1;
             } else {
                 throw new \Exception('Unknown direction for sorting - (ASC or DESC)');
@@ -74,12 +67,7 @@ class ArrayAdapter implements AdapterInterface
         $this->data = new ArrayCollection(iterator_to_array($iterator));
     }
 
-    /**
-     * @param QueryBuilder $queryBuilder
-     *
-     * @return Pagerfanta
-     */
-    public function getPager(Collection $data, GridInterface $grid)
+    public function getPager(Collection $data, GridInterface $grid): Pagerfanta
     {
         $adapter = new PagerfantaArrayAdapter(iterator_to_array($data));
         $pager = new Pagerfanta($adapter);
@@ -95,10 +83,6 @@ class ArrayAdapter implements AdapterInterface
         return $pager;
     }
 
-    /**
-     * @param QueryBuilder      $queryBuilder
-     * @param ColumnInterface[] $columns
-     */
     protected function addSearch(GridInterface $grid): void
     {
         $filter = $grid->getOption('filter');
@@ -124,7 +108,7 @@ class ArrayAdapter implements AdapterInterface
                     break;
                 case 'like':
                     $data = $data->filter(function ($row) use ($accessor, $field, $value) {
-                        return strpos($accessor->getValue($row, $field), $value) !== false;
+                        return false !== strpos($accessor->getValue($row, $field), $value);
                     });
                     break;
                 case 'gteq':
@@ -133,6 +117,7 @@ class ArrayAdapter implements AdapterInterface
                         if ($fieldValue instanceof \DateTimeInterface) {
                             $value = new \DateTime($value);
                         }
+
                         return $fieldValue >= $value;
                     });
                     break;
@@ -142,6 +127,7 @@ class ArrayAdapter implements AdapterInterface
                         if ($fieldValue instanceof \DateTimeInterface) {
                             $value = new \DateTime($value);
                         }
+
                         return $fieldValue <= $value;
                     });
                     break;
@@ -151,19 +137,10 @@ class ArrayAdapter implements AdapterInterface
         $this->data = $data;
     }
 
-    private function filterEquals($field, $value, Collection $data)
-    {
-        $accessor = $this->accessor;
-
-    }
-
-    /**
-     * @param array $data
-     * @return ArrayAdapter
-     */
     public function setData(array $data): ArrayAdapter
     {
         $this->data = new ArrayCollection($data);
+
         return $this;
     }
 }

@@ -1,12 +1,10 @@
 <?php
-
 /*
- * This file is part of the Cwd Grid Bundle
+ * This file is part of the cwd/grid-bundle
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * ©2022 cwd.at GmbH <office@cwd.at>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * see LICENSE file for details
  */
 
 declare(strict_types=1);
@@ -15,16 +13,11 @@ namespace Cwd\GridBundle\Exception;
 
 class UnexpectedTypeException extends \InvalidArgumentException
 {
-    /**
-     * UnexpectedTypeException constructor.
-     *
-     * @param string $value
-     * @param string $expectedType
-     */
-    public function __construct($value, $expectedType)
+    public function __construct(mixed $value, string $expectedType)
     {
         parent::__construct(
-            sprintf('Expected argument of type "%s", "%s" given',
+            sprintf(
+                'Expected argument of type "%s", "%s" given',
                 $expectedType,
                 is_object($value) ? get_class($value) : gettype($value)
             )

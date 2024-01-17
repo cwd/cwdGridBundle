@@ -1,12 +1,10 @@
 <?php
-
 /*
- * This file is part of the PowerUI Application.
+ * This file is part of the cwd/grid-bundle
  *
- * (c)2019 cwd.at GmbH <office@cwd.at>
+ * ©2022 cwd.at GmbH <office@cwd.at>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * see LICENSE file for details
  */
 
 declare(strict_types=1);
@@ -20,14 +18,14 @@ class ActionPermissionType extends ActionType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'permission' => '',
             'template' => '@CwdGrid/column/permission_actions.html.twig',
-        ));
+        ]);
 
         $resolver->setAllowedTypes('permission', 'string');
     }

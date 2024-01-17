@@ -1,21 +1,19 @@
 <?php
-
 /*
- * This file is part of the Cwd Grid Bundle
+ * This file is part of the cwd/grid-bundle
  *
- * (c) 2018 cwd.at GmbH <office@cwd.at>
+ * ©2022 cwd.at GmbH <office@cwd.at>
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * see LICENSE file for details
  */
 
 declare(strict_types=1);
 
 namespace Cwd\GridBundle\Column;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\DoctrineChoiceLoader;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\IdReader;
 use Symfony\Bridge\Doctrine\Form\ChoiceList\ORMQueryBuilderLoader;
@@ -30,7 +28,7 @@ class EntityType extends ChoiceType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
@@ -62,20 +60,13 @@ class EntityType extends ChoiceType
             }
 
             if (null === $this->getOption('em')) {
-                throw new \RuntimeException(sprintf(
-                    'Object Manager not set'.
-                    'Did you forget to set it? "em"'
-                ));
+                throw new \RuntimeException(sprintf('Object Manager not set'.'Did you forget to set it? "em"'));
             }
 
             $em = $this->getOption('em')->getManagerForClass($options['class']);
 
             if (null === $em) {
-                throw new \RuntimeException(sprintf(
-                    'Class "%s" seems not to be a managed Doctrine entity. '.
-                    'Did you forget to map it?',
-                    $options['class']
-                ));
+                throw new \RuntimeException(sprintf('Class "%s" seems not to be a managed Doctrine entity. '.'Did you forget to map it?', $options['class']));
             }
 
             return $em;
@@ -99,7 +90,7 @@ class EntityType extends ChoiceType
             return new IdReader($options['em'], $classMetadata);
         };
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data' => null,
             'class' => null,
             'query_builder' => null,
@@ -107,7 +98,7 @@ class EntityType extends ChoiceType
             'choice_label' => null,
             'id_reader' => null,
             'em' => null,
-        ));
+        ]);
         $resolver->setRequired(['class']);
 
         $resolver->setNormalizer('em', $emNormalizer);
@@ -143,13 +134,11 @@ class EntityType extends ChoiceType
         return $printOptions;
     }
 
-    public function renderFilter(Environment $twig)
+    public function renderFilter(Environment $twig): string
     {
-        $value = (null !== $this->getFilter() && '' != isset($this->getFilter()->value)) ? $this->getFilter()->value : '';
-
         return $twig->render('@CwdGrid/filter/choice.html.twig', [
             'data' => $this->buildColumnOptions(),
-            'value' => $value,
+            'value' => $this->getFirstFilterValue(),
             'column' => $this,
         ]);
     }
@@ -165,12 +154,12 @@ class EntityType extends ChoiceType
      * @internal This method is public to be usable as callback. It should not
      *           be used in user code.
      */
-    public function getQueryBuilderPartsForCachingHash($queryBuilder)
+    public function getQueryBuilderPartsForCachingHash($queryBuilder): array
     {
-        return array(
+        return [
             $queryBuilder->getQuery()->getSQL(),
-            array_map(array($this, 'parameterToArray'), $queryBuilder->getParameters()->toArray()),
-        );
+            array_map([$this, 'parameterToArray'], $queryBuilder->getParameters()->toArray()),
+        ];
     }
 
     /**
@@ -178,21 +167,12 @@ class EntityType extends ChoiceType
      *
      * @return array The array representation of the parameter
      */
-    private function parameterToArray(Parameter $parameter)
+    private function parameterToArray(Parameter $parameter): array
     {
-        return array($parameter->getName(), $parameter->getType(), $parameter->getValue());
+        return [$parameter->getName(), $parameter->getType(), $parameter->getValue()];
     }
 
-    /**
-     * Return the default loader object.
-     *
-     * @param ObjectManager $manager
-     * @param QueryBuilder  $queryBuilder
-     * @param string        $class
-     *
-     * @return ORMQueryBuilderLoader
-     */
-    public function getLoader(ObjectManager $manager, $queryBuilder, $class)
+    public function getLoader(ObjectManager $manager, QueryBuilder $queryBuilder, string $class): ORMQueryBuilderLoader
     {
         return new ORMQueryBuilderLoader($queryBuilder);
     }

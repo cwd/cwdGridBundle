@@ -1,0 +1,13 @@
+includes:
+    - phpstan-baseline.neon
+    - vendor/phpstan/phpstan-beberlei-assert/extension.neon
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-symfony/rules.neon
+parameters:
+    checkGenericClassInNonGenericObjectType: false
+    checkMissingIterableValueType: false
+    symfony:
+        container_xml_path: var/cache/dev/App_KernelDevDebugContainer.xml
+    paths:
+        - src
+    editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'

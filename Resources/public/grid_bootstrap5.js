@@ -59,7 +59,7 @@ $(document).ready(function(){
         });
 
         // List length
-        $grid.find('select.listLengthSelector').on('change', function () {
+        $grid.parent().parent().find('select.listLengthSelector').on('change', function () {
             $params.set('limit', $(this).val());
             $params.set('page', 1);
             document.location.href = '?' + $params.toString();

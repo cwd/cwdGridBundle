@@ -15,6 +15,7 @@ use Cwd\GridBundle\Adapter\AdapterInterface;
 use Cwd\GridBundle\Column\AbstractColumn;
 use Cwd\GridBundle\Column\ColumnInterface;
 use Cwd\GridBundle\GridBuilderInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -207,7 +208,7 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
         return $columns;
     }
 
-    public function getQueryBuilder(ObjectManager $objectManager, array $params = []): QueryBuilder
+    public function getQueryBuilder(EntityManagerInterface $objectManager, array $params = []): QueryBuilder
     {
         throw new \InvalidArgumentException('This method is only allowed when using DoctrineAdapter');
     }

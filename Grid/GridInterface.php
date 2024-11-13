@@ -60,5 +60,5 @@ interface GridInterface
 
     public function setChildren(array $children): self;
 
-    public function getQueryBuilder(ObjectManager $objectManager, array $params = []): QueryBuilder;
+    public function getQueryBuilder(EntityManagerInterface $objectManager, array $params = []): QueryBuilder
 }

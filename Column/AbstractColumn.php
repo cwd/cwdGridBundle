@@ -92,7 +92,7 @@ abstract class AbstractColumn implements ColumnInterface
             $value = $callable($value, $object, $primary);
         }
 
-        if ($this->getOption('translatable')) {
+        if ($this->getOption('translatable') && null !== $value) {
             $value = $this->translate($value, $this->getOption('translatable_domain'));
         }
 

@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Ui\Admin\Grid\Column;
+namespace Cwd\GridBundle\Column;
 
 use Cwd\GridBundle\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;

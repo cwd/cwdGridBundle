@@ -21,6 +21,8 @@ interface ColumnInterface
     public function getOption(string $name, mixed $default = null): mixed;
     public function getField(): ?string;
     public function getSqlField(): ?string;
+    /** Only implemented for DoctrineAdapter */
+    public function getSqlSortFields(): array;
     public function getName(): ?string;
     public function render(mixed $value, mixed $object, string|int $primary, Environment $twig): mixed;
     public function getValue(mixed $object, string $field, string $primary, PropertyAccessorInterface $accessor, mixed $parentField = null): mixed;

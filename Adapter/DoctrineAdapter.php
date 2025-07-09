@@ -34,7 +34,10 @@ class DoctrineAdapter implements AdapterInterface
             if ($grid->has($field)) {
                 $column = $grid->get($field);
                 $grid->setSortField($column, $grid->getOption('sortDir'));
-                $queryBuilder->orderBy($column->getSqlField(), $grid->getOption('sortDir'));
+
+                foreach($column->getSqlSortFields() as $sqlSortField) {
+                    $queryBuilder->addOrderBy($sqlSortField, $grid->getOption('sortDir'));
+                }
             }
         }
 

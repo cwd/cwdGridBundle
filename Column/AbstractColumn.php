@@ -61,6 +61,19 @@ abstract class AbstractColumn implements ColumnInterface
         return $this->getOption('sqlField');
     }
 
+    /**
+     * Only implemented for DoctrineAdapter
+     * @return string[]
+     */
+    public function getSqlSortFields(): array
+    {
+        if (null === $this->getOption('sqlSortFields') || !is_array($this->getOption('sqlSortFields'))) {
+            return [$this->getSqlField()];
+        }
+
+        return $this->getOption('sqlSortFields');
+    }
+
     public function setIsSorted(bool $state): ColumnInterface
     {
         $this->isSorted = $state;
@@ -165,9 +178,11 @@ abstract class AbstractColumn implements ColumnInterface
             'operator' => 'like',
             'sqlField' => null,
             'parentField' => null,
+            'sqlSortFields' => null, // Only implemented for DoctrineAdapter
         ]);
 
         $resolver->setAllowedTypes('attr', 'array');
+        $resolver->setAllowedTypes('sqlSortFields', ['null', 'array']);
     }
 
     public function getHeaderStyleOptions(): array

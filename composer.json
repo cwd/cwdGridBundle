@@ -22,7 +22,8 @@
         "symfony/twig-bundle": ">5.4",
         "twig/twig": "^v3.1.0",	
         "pagerfanta/pagerfanta": ">3.6",
-        "babdev/pagerfanta-bundle": ">3.6"
+        "babdev/pagerfanta-bundle": ">3.6",
+        "symfony/form": "^7.3"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "@stable",
@@ -30,7 +31,8 @@
         "symfony/css-selector": "@stable",
         "phpstan/phpstan": "^1.5",
         "phpstan/phpstan-beberlei-assert": "^1.0",
-        "phpstan/phpstan-symfony": "^1.1"
+        "phpstan/phpstan-symfony": "^1.1",
+        "phpstan/phpstan-deprecation-rules": "^1.2"
     },
     "suggest": {
         "doctrine/orm": "For using DoctrineAdapter",

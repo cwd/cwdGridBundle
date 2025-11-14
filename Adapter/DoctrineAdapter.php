@@ -26,8 +26,14 @@ class DoctrineAdapter implements AdapterInterface
 
     public function getData(GridInterface $grid): Pagerfanta
     {
+        $manager = $this->getDoctrineRegistry()->getManager();
+
+        if (!$manager instanceof \Doctrine\ORM\EntityManagerInterface) {
+            throw new \RuntimeException('Expected EntityManagerInterface, got ' . get_class($manager));
+        }
+
         /** @var QueryBuilder $queryBuilder */
-        $queryBuilder = $grid->getQueryBuilder($this->getDoctrineRegistry()->getManager(), $grid->all());
+        $queryBuilder = $grid->getQueryBuilder($manager, $grid->all());
 
         if (null !== $grid->getOption('sortField')) {
             $field = $grid->getOption('sortField');

@@ -1,10 +1,6 @@
 <select class="form-control form-control-sm filter" data-field="{{ column.name }}" data-operator="eq" name="filters[]">
     <option value="">{{ allOptionsLabel|trans }}</option>
-    {% for element in cases %}
-        {% apply spaceless %}
-            <option {% if (column.dataToView(element.value) == value) %}selected{% endif %} value="{{ column.dataToView(element.value) }}">
-                {{ element.value|trans }}
-            </option>
-        {% endapply %}
-    {% endfor %}
+    {%- for element in cases %}
+        <option{%- if (column.dataToView(element.value) == value) %} selected{% endif %} value="{{ column.dataToView(element.value) }}">{{- element.value|trans -}}</option>
+    {%- endfor %}
 </select>

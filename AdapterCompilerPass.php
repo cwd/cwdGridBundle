@@ -19,7 +19,6 @@ class AdapterCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        /** @phpstan-ignore-next-line */
         if (!$container->has(GridFactory::class)) {
             return;
         }

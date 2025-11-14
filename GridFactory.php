@@ -72,7 +72,7 @@ class GridFactory
 
     public function getType(string $name, AdapterInterface $adapter, array $options = []): GridInterface
     {
-        if (class_exists($name) && in_array('Cwd\GridBundle\Grid\GridInterface', class_implements($name))) { // @phpstan-ignore-line
+        if (class_exists($name) && in_array('Cwd\GridBundle\Grid\GridInterface', class_implements($name) ?: [])) {
             /** @var GridInterface $type */
             $type = new $name($this->translator, $options);
             $type->setAdapter($adapter);

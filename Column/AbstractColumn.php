@@ -229,7 +229,7 @@ abstract class AbstractColumn implements ColumnInterface
                 $key = $cssName;
             }
 
-            if (!empty($value) || 'auto' !== $value) {
+            if (!empty($value) && 'auto' !== $value) {
                 $optionMap[$key] = $value;
             }
         }

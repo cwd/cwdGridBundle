@@ -78,11 +78,11 @@ class DateType extends AbstractColumn
 
         foreach ($filters as $filter) {
             if (isset($filter['operator']) && 'gteq' == $filter['operator']) {
-                $value['from'] = $filter['value']; // @phpstan-ignore-line
+                $value['from'] = $filter['value'];
             }
 
             if (isset($filter['operator']) && 'lteq' == $filter['operator']) {
-                $value['to'] = $filter['value']; // @phpstan-ignore-line
+                $value['to'] = $filter['value'];
             }
         }
 

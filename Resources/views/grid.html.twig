@@ -5,21 +5,14 @@
             <tr>
                 {%- for column in grid %}
 		            {%- if column.options.visible -%}
-                    {% apply spaceless %}
-                        {% set class = [column.options.attr.class|default('')] %}
-                        {% if column.options.sortable %}{% set class = class|merge(['sortable']) %}{% endif %}
-                        {% if column.isSorted() %}{% set class = class|merge(['sorted '~column.getSortDir()]) %}{% endif %}
-                        <th class="{{- class|join(' ') -}}"
-                            style="{%- for key,value in column.getHeaderStyleOptions() -%}{{ key }}:{{ value }};{%- endfor -%}"
-                            data-field="{{ column.name }}"
-                            {%- for key,value in column.options.attr -%}{%- if key != 'class' -%}{{ key }}="{{ value }}" {% endif %}{% endfor %}
-                        >
-                            <div class="{% if column.options.ellipsis %}cwd-grid--ellipsis{% endif %}">
-                                {% if column.options.label is not empty %}{{ column.options.label|trans|raw }}{% endif %}
-                            </div>
+                        {%- set class = [column.options.attr.class|default('')] -%}
+                        {%- if column.options.sortable %}{%- set class = class|merge(['sortable']) -%}{%- endif -%}
+                        {%- if column.isSorted() %}{%- set class = class|merge(['sorted '~column.getSortDir()]) -%}{%- endif -%}
+                        <th class="{{- class|join(' ') -}}" style="{%- for key,value in column.getHeaderStyleOptions() -%}{{ key }}:{{ value }};{%- endfor -%}" data-field="{{ column.name }}"
+                            {%- for key,value in column.options.attr -%}{%- if key != 'class' %} {{ key }}="{{ value }}"{% endif -%}{%- endfor -%}>
+                            <div class="{%- if column.options.ellipsis %}cwd-grid--ellipsis{%- endif -%}">{%- if column.options.label is not empty %}{{ column.options.label|trans|raw }}{% endif -%}</div>
                         </th>
-                    {% endapply %}
-                    {% endif %}
+                    {%- endif %}
                 {%- endfor -%}
             </tr>
             <tr>

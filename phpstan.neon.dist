@@ -1,13 +1,25 @@
 includes:
-    - phpstan-baseline.neon
     - vendor/phpstan/phpstan-beberlei-assert/extension.neon
     - vendor/phpstan/phpstan-symfony/extension.neon
     - vendor/phpstan/phpstan-symfony/rules.neon
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
 parameters:
-    checkGenericClassInNonGenericObjectType: false
-    checkMissingIterableValueType: false
-    symfony:
-        container_xml_path: var/cache/dev/App_KernelDevDebugContainer.xml
+    level: 6
     paths:
-        - src
+        - Adapter
+        - Column
+        - DependencyInjection
+        - Exception
+        - Grid
+        - Twig
+        - GridBuilder.php
+        - GridBuilderInterface.php
+        - GridFactory.php
+        - CwdGridBundle.php
+        - AdapterCompilerPass.php
+    ignoreErrors:
+        -
+            identifier: missingType.iterableValue
+        -
+            identifier: missingType.generics
     editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'

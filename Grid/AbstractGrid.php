@@ -161,7 +161,13 @@ abstract class AbstractGrid implements GridInterface, \IteratorAggregate
             $object = $object[0];
         }
 
-        return $this->accessor->getValue($object, $this->primary);
+        $value = $this->accessor->getValue($object, $this->primary);
+
+        if ($value instanceof \Ramsey\Uuid\UuidInterface) {
+            return $value->toString();
+        }
+
+        return $value;
     }
 
     public function findPrimary(): ?string
